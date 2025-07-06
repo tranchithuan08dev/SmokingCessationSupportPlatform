@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SmokingCessationSupportPlatform.BusinessObjects;
+namespace SmokingCessationSupportPlatform.BusinessObjects.Models;
 
 public partial class BlogComment
 {

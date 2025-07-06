@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
+
 namespace SmokingCessationSupportPlatform
 {
     public class Program
@@ -8,7 +11,8 @@ namespace SmokingCessationSupportPlatform
 
             // Add services to the container.
             builder.Services.AddRazorPages();
-
+            builder.Services.AddDbContext<SmokingCessationSupportPlatformContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyStoreContext")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
