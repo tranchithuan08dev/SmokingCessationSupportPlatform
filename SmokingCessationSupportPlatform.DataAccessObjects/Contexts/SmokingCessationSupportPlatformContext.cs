@@ -389,7 +389,7 @@ public partial class SmokingCessationSupportPlatformContext : DbContext
 
             entity.Property(e => e.ExpiryTime)
                   .HasColumnType("datetime");
-
+            entity.Property(e => e.IsUsed).IsRequired();
             entity.HasOne(e => e.User)
                   .WithMany(u => u.PasswordResetTokens)
                   .HasForeignKey(e => e.UserId)

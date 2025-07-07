@@ -1,10 +1,56 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div id="smokingPosterCarousel" class="carousel slide rounded shadow" data-bs-ride="carousel" data-bs-interval="3000">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="~/image/Background.webp" class="d-block " alt="Stop Smoking Poster 1" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="~/image/Poster2.webp" class="d-block" alt="Stop Smoking Poster 2" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="~/image/Poster3.jpg" class="d-block" alt="Stop Smoking Poster 3" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="text-white bg-dark bg-opacity-75 p-4 rounded shadow custom-jumbotron">
+                <h1 class="display-4">Welcome to the Smoking Cessation Support Platform!</h1>
+                <p class="lead">Your journey to quit smoking starts here.</p>
+                <hr class="my-4 border-light" />
+                <p>We provide the tools and resources you need to achieve a healthier life.</p>
+                <a class="btn btn-primary btn-lg mt-3" href="#" role="button">Learn More</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Community Support</h2>
+            <p>Connect with like-minded individuals, share experiences, and get encouragement from our community.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">Join Now &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Learning Resources</h2>
+            <p>Access detailed articles, videos, and guides on effective smoking cessation methods.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">Explore &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Personalized Plan</h2>
+            <p>Build a tailored quit plan, track your progress, and get expert advice.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">Start Your Plan &raquo;</a></p>
+        </div>
+    </div>
+    <hr>
 </div>
