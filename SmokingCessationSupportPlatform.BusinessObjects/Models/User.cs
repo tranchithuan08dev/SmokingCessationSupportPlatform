@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SmokingCessationSupportPlatform.BusinessObjects;
+namespace SmokingCessationSupportPlatform.BusinessObjects.Models;
 
 public partial class User
 {
@@ -50,4 +50,6 @@ public partial class User
     public virtual ICollection<UserAchievement> UserAchievements { get; set; } = new List<UserAchievement>();
 
     public virtual ICollection<UserMembership> UserMemberships { get; set; } = new List<UserMembership>();
+    public virtual ICollection<PasswordResetToken> PasswordResetTokens { get; set; }= new List<PasswordResetToken>();
+
 }

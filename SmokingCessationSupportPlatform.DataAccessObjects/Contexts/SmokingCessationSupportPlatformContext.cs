@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SmokingCessationSupportPlatform.BusinessObjects.Models;
 
-namespace SmokingCessationSupportPlatform.BusinessObjects;
+namespace SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
 
 public partial class SmokingCessationSupportPlatformContext : DbContext
 {
@@ -47,9 +49,21 @@ public partial class SmokingCessationSupportPlatformContext : DbContext
 
     public virtual DbSet<UserMembership> UserMemberships { get; set; }
 
+    public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
+
+
+    string GetConnectionString()
+    {
+        IConfiguration config = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json").Build();
+        return config["ConnectionStrings:DefaultConnection"];
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=CHITHUAN\\SQLEXPRESS; Database=SmokingCessationSupportPlatform; Uid=sa; Pwd=12345; TrustServerCertificate=True");
+    {
+        optionsBuilder.UseSqlServer(GetConnectionString());
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -363,6 +377,23 @@ public partial class SmokingCessationSupportPlatformContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__UserMembe__UserI__31EC6D26");
+        });
+
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Token)
+                  .IsRequired()
+                  .HasMaxLength(255);
+
+            entity.Property(e => e.ExpiryTime)
+                  .HasColumnType("datetime");
+            entity.Property(e => e.IsUsed).IsRequired();
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.PasswordResetTokens)
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);

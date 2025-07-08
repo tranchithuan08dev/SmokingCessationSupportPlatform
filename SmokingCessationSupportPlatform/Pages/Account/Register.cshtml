@@ -1,0 +1,93 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Account.RegisterModel
+@{
+    // Set the title of the page that appears in the browser tab
+    ViewData["Title"] = "Register New Account";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg p-4">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Create Your Account</h2>
+                    <hr />
+
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-info text-center" role="alert">
+                            @Model.Message
+                        </div>
+                    }
+
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Username" class="form-label">Username</label>
+                            <input asp-for="Input.Username" class="form-control" autocomplete="username" autofocus />
+                            <span asp-validation-for="Input.Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label">Email Address</label>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="email" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" class="form-label">Password</label>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.FullName" class="form-label">Full Name (Optional)</label>
+                            <input asp-for="Input.FullName" class="form-control" autocomplete="name" />
+                            <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.DateOfBirth" class="form-label">Date of Birth (Optional)</label>
+                            <input asp-for="Input.DateOfBirth" class="form-control" type="date" />
+                            <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Gender" class="form-label">Gender (Optional)</label>
+                            <select asp-for="Input.Gender" class="form-select">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                            <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        Already have an account? <a asp-page="/Account/Login">Login here</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        // This partial view enables client-side validation using jQuery Validation
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

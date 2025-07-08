@@ -1,0 +1,10 @@
+﻿.carousel-item img {
+    width: 624px;
+    height: 550px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.custom-jumbotron {
+    height: 550px; 
+    overflow: auto; 
+}
