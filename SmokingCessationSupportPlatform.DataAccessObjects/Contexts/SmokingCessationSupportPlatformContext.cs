@@ -396,6 +396,47 @@ public partial class SmokingCessationSupportPlatformContext : DbContext
                   .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
+        modelBuilder.Entity<Conversation>(entity =>
+        {
+            entity.HasKey(e => e.ConversationId);
+
+            entity.Property(e => e.ConversationId).HasColumnName("ConversationID");
+
+            entity.HasOne(c => c.User)
+                .WithMany(co => co.Conversations)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(c => c.Coach)
+            .WithMany(co => co.Conversations)
+            .HasForeignKey(c => c.CoachId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasMany(c => c.Messages)
+                .WithOne(m => m.Conversation)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Message>(entity =>
+        {
+            entity.HasKey(m => m.MessageId);
+
+            entity.Property(m => m.Content).IsRequired().HasMaxLength(2000);
+            entity.Property(m => m.SentAt).IsRequired();
+            entity.Property(m => m.IsRead).IsRequired();
+            entity.Property(m => m.FromId).IsRequired(); 
+            entity.Property(m => m.FromType).IsRequired().HasMaxLength(10); 
+            entity.Property(m => m.ToId).IsRequired();   
+            entity.Property(m => m.ToType).IsRequired().HasMaxLength(10);
+
+            entity.HasOne(m => m.Conversation)
+         .WithMany(c => c.Messages)
+         .HasForeignKey(m => m.ConversationId)
+         .IsRequired();
+
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
 

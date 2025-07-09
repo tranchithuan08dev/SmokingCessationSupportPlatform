@@ -1,0 +1,239 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.ChatModel
+@{
+}
+<style>
+    /* Basic Chatbox Styling */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 80vh; /* Adjust as needed */
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .chat-header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        font-size: 1.2em;
+        text-align: center;
+        border-bottom: 1px solid #0056b3;
+    }
+
+    .chat-messages {
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+    }
+
+    .message {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+        .message.mine {
+            justify-content: flex-end;
+        }
+
+        .message.other {
+            justify-content: flex-start;
+        }
+
+    .message-bubble {
+        max-width: 70%;
+        padding: 10px 15px;
+        border-radius: 20px;
+        color: white;
+        line-height: 1.4;
+        position: relative;
+    }
+
+    .message.mine .message-bubble {
+        background-color: #007bff;
+        align-self: flex-end;
+        border-bottom-right-radius: 5px; /* Tweak for better visual */
+    }
+
+    .message.other .message-bubble {
+        background-color: #e2e3e5;
+        color: #333;
+        align-self: flex-start;
+        border-bottom-left-radius: 5px; /* Tweak for better visual */
+    }
+
+    .message-info {
+        font-size: 0.75em;
+        color: #6c757d;
+        margin-top: 2px;
+        text-align: right;
+    }
+
+    .message.other .message-info {
+        text-align: left;
+    }
+
+    .message-sender-name {
+        font-weight: bold;
+        margin-bottom: 3px;
+        font-size: 0.85em;
+        color: #343a40; /* Màu tối hơn cho tên */
+    }
+
+    .chat-input {
+        display: flex;
+        padding: 15px;
+        border-top: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+        .chat-input textarea {
+            flex-grow: 1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            resize: none; /* Disable manual resize */
+            height: 40px; /* Initial height */
+            line-height: 1.4;
+        }
+
+        .chat-input button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+
+            .chat-input button:hover {
+                background-color: #218838;
+            }
+</style>
+
+<div class="chat-container">
+    <div class="chat-header">
+        Chat with @Model.PartnerType (@Model.PartnerId)
+    </div>
+
+    <div class="chat-messages" id="messagesList">
+        @foreach (var message in Model.Messages)
+        {
+            var isMyMessage = (message.FromId == Model.CurrentUserId && message.FromType == Model.CurrentUserType);
+            <div class="message @(isMyMessage ? "mine" : "other")">
+                <div>
+                    @if (!isMyMessage) // Hiển thị tên người gửi nếu không phải tin của mình
+                    {
+                        <div class="message-sender-name">
+                            @message.FromName
+                        </div>
+                    }
+                    <div class="message-bubble">
+                        @message.Content
+                    </div>
+                    <div class="message-info">
+                        @message.SentAt.ToString("HH:mm") @(isMyMessage && message.IsRead ? "✔️" : "")
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <form method="post" asp-page-handler="SendMessage" class="chat-input">
+        <textarea asp-for="MessageContent" placeholder="Nhập tin nhắn..." rows="1"></textarea>
+        <input type="hidden" name="conversationId" value="@Model.ConversationId" />
+        <input type="hidden" name="fromId" value="@Model.CurrentUserId" />
+        <input type="hidden" name="fromType" value="@Model.CurrentUserType" />
+        <input type="hidden" name="toId" value="@Model.PartnerId" />
+        <input type="hidden" name="toType" value="@Model.PartnerType" />
+        <button type="submit">Gửi</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub") // Địa chỉ của ChatHub
+            .withAutomaticReconnect()
+            .build();
+
+        const messagesList = document.getElementById("messagesList");
+        const chatInput = document.querySelector(".chat-input textarea");
+
+        // Cuộn xuống cuối tin nhắn khi tải trang
+        function scrollToBottom() {
+            messagesList.scrollTop = messagesList.scrollHeight;
+        }
+
+        // Hàm để thêm tin nhắn vào UI
+        function appendMessage(message, isMine) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", isMine ? "mine" : "other");
+
+            const contentDiv = document.createElement("div");
+
+            if (!isMine) { // Chỉ hiển thị tên người gửi nếu không phải tin của mình
+                const senderNameDiv = document.createElement("div");
+                senderNameDiv.classList.add("message-sender-name");
+                senderNameDiv.textContent = message.fromName;
+                contentDiv.appendChild(senderNameDiv);
+            }
+
+            const bubbleDiv = document.createElement("div");
+            bubbleDiv.classList.add("message-bubble");
+            bubbleDiv.textContent = message.content;
+
+            const infoDiv = document.createElement("div");
+            infoDiv.classList.add("message-info");
+            const sentAt = new Date(message.sentAt);
+            infoDiv.textContent = sentAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + (isMine && message.isRead ? " ✔️" : "");
+
+            contentDiv.appendChild(bubbleDiv);
+            contentDiv.appendChild(infoDiv);
+            messageDiv.appendChild(contentDiv);
+            messagesList.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Xử lý sự kiện nhận tin nhắn từ SignalR
+        connection.on("ReceiveMessage", function (message) {
+            const currentUserId = @Model.CurrentUserId;
+            const currentUserType = "@Model.CurrentUserType";
+            const isMine = (message.fromId === currentUserId && message.fromType === currentUserType);
+            appendMessage(message, isMine);
+
+            // Đánh dấu tin nhắn là đã đọc ngay khi nhận (nếu nó là tin nhắn gửi đến mình)
+            if (!isMine && message.conversationId === @Model.ConversationId) {
+                 connection.invoke("MarkMessagesAsRead", message.conversationId, currentUserId, currentUserType)
+                    .catch(err => console.error(err.toString()));
+            }
+        });
+
+        // Kết nối đến SignalR Hub
+        connection.start().then(function () {
+            console.log("SignalR Connected!");
+            const conversationId = @Model.ConversationId;
+            if (conversationId) {
+                connection.invoke("JoinChat", conversationId.toString())
+                    .catch(err => console.error(err.toString()));
+            }
+            scrollToBottom(); // Cuộn xuống cuối khi kết nối xong và tải trang
+        }).catch(function (err) {
+            console.error(err.toString());
+        });
+
+        // Tự động điều chỉnh chiều cao textarea
+        chatInput.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+    </script>
+}

@@ -60,13 +60,13 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Account
                     };
 
 
-                    if (!string.IsNullOrEmpty(user.UserRole))
+                    if (string.IsNullOrEmpty(user.UserRole) || user.UserRole.Equals("Member", StringComparison.OrdinalIgnoreCase))
                     {
-                        claims.Add(new Claim(ClaimTypes.Role, user.UserRole)); 
+                        claims.Add(new Claim(ClaimTypes.Role, "User"));
                     }
                     else
                     {
-                        claims.Add(new Claim(ClaimTypes.Role, "Member")); 
+                        claims.Add(new Claim(ClaimTypes.Role, user.UserRole));
                     }
 
 
