@@ -175,6 +175,11 @@ namespace SmokingCessationSupportPlatform.Services
             return "Không xác định";
         }
 
-     
+        public async Task<Conversation?> GetConversationByIdAsync(int conversationId)
+        {
+            return await _conversationRepository.GetConversationByIdWithMessagesAsync(conversationId);
+        }
+
+
     }
 }

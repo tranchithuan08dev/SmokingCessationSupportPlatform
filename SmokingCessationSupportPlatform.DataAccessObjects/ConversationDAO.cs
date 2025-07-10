@@ -27,6 +27,15 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects
                     .ThenInclude(co => co.CoachNavigation); // Tải thông tin User của Coach
         }
 
+        public async Task<Conversation?> GetConversationByIdWithMessagesAsync(int id)
+        {
+            return await _dbSet
+                                 .Include(c => c.Messages) // Bao gồm các tin nhắn
+                                                           // .Include(c => c.User) // Nếu bạn muốn tải thông tin user/coach liên quan
+                                                           // .Include(c => c.Coach)
+                                 .FirstOrDefaultAsync(c => c.ConversationId == id);
+        }
+
         public IQueryable<Conversation> GetCoachConversationsQuery(int coachId)
         {
             // Bao gồm User của conversation

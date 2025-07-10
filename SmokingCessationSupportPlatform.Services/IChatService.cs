@@ -16,5 +16,6 @@ namespace SmokingCessationSupportPlatform.Services
         Task<MessageViewModel?> SendMessageAsync(int conversationId, int fromId, string fromType, int toId, string toType, string content);
         Task<List<MessageViewModel>> GetConversationMessagesWithSenderInfoAsync(int conversationId);
         Task MarkMessagesAsReadAsync(int conversationId, int receiverId, string receiverType);
+        Task<Conversation?> GetConversationByIdAsync(int conversationId); 
     }
 }

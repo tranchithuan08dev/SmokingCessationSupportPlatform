@@ -40,7 +40,10 @@ namespace SmokingCessationSupportPlatform.Repositories
         {
             return await _conversationDAO.GetCoachConversationsQuery(coachId).ToListAsync();
         }
-
+        public async Task<Conversation?> GetConversationByIdWithMessagesAsync(int id)
+        {
+            return await _conversationDAO.GetConversationByIdWithMessagesAsync(id);
+        }
         public async Task AddConversationAsync(Conversation conversation)
         {
             await _conversationDAO.AddAsync(conversation);

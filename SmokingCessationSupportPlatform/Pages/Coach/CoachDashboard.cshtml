@@ -1,4 +1,54 @@
 ﻿@page
 @model SmokingCessationSupportPlatform.Web.Pages.Coach.CoachDashboardModel
 @{
+    Layout = "_LayoutNoHeader";
 }
+@section Head {
+    <link rel="stylesheet" href="~/css/coach-dashboard.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+}
+
+<section id="sidebar">
+    <a href="/Coach/Dashboard" class="brand">
+        <i class='bx bxs-smile'></i>
+        <span class="text">Coach Dashboard</span>
+    </a>
+    <ul class="side-menu top">
+        <li>
+            <a href="/Coach/Dashboard">
+                <i class="bx bxs-dashboard"></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Coach/Analytics">
+                <i class="bx bxs-doughnut-chart"></i>
+                <span class="text">Analytics</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Coach/Message">
+                <i class="bx bxs-message-dots"></i>
+                <span class="text">Message</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Coach/Team">
+                <i class="bx bxs-group"></i> <span class="text">Team</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Auth/Logout">
+                <i class="bx bx-log-out-circle"></i> <span class="text">Logout</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="side-menu bottom">
+        <li>
+            <a href="/Coach/Settings">
+                <i class='bx bx-cog'></i>
+                <span class="text">Settings</span>
+            </a>
+        </li>
+    </ul>
+</section>

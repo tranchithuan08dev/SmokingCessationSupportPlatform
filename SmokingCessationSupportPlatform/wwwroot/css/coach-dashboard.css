@@ -1,0 +1,109 @@
+﻿/* --- Global Resets & Body Styling (often in site.css, but for this example, include here) --- */
+body {
+    font-family: 'Poppins', sans-serif; /* A common modern font, add to _LayoutNoHeader via Google Fonts */
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5; /* A light, soft background for the main content area */
+}
+
+/* --- Base List & Link Styles (Applied universally, can be in site.css or a global CSS file) --- */
+ul {
+    list-style-type: none; /* Removes bullet points */
+    padding: 0; /* Removes default padding */
+    margin: 0; /* Removes default margin */
+}
+
+li a {
+    text-decoration: none; /* Removes underline from all links inside list items */
+    color: inherit; /* Inherits text color */
+}
+
+/* --- Sidebar Specific Styles --- */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; /* Consistent width */
+    height: 100%;
+    z-index: 1000;
+    background-color: #ffffff; /* Clean white background */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    display: flex; /* Use flexbox for layout inside sidebar */
+    flex-direction: column; /* Stack items vertically */
+    padding: 20px 0; /* Add some vertical padding for overall balance */
+    box-sizing: border-box; /* Include padding in width/height calculation */
+}
+
+
+    #sidebar .brand {
+        font-size: 20px;
+        font-weight: 700;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        color: #3498db; 
+        padding: 0 20px; 
+        margin-bottom: 30px; 
+    }
+
+        #sidebar .brand i {
+            font-size: 28px; 
+            margin-right: 10px; 
+        }
+
+        #sidebar .brand .text {
+            text-decoration: none; 
+        }
+
+    #sidebar .side-menu.top {
+        flex-grow: 1;
+        width: 100%;
+    }
+
+    #sidebar .side-menu li {
+        height: 48px; 
+        margin-bottom: 5px; 
+        border-radius: 0; 
+        transition: background-color 0.3s ease, padding-left 0.3s ease; 
+    }
+
+        #sidebar .side-menu li a {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #555;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease; 
+        }
+
+            #sidebar .side-menu li a i {
+                font-size: 22px;
+                margin-right: 15px;
+            }
+
+        #sidebar .side-menu li:hover {
+            background-color: #ecf0f1;
+        }
+
+            #sidebar .side-menu li:hover a {
+                color: #3498db; 
+            }
+
+        #sidebar .side-menu li.active {
+            background-color: #e0f2f7; /* Lighter blue background for active item */
+            border-left: 5px solid #3498db; /* Highlight bar on the left */
+            padding-left: 15px; /* Adjust padding to account for border */
+        }
+
+            #sidebar .side-menu li.active a {
+                color: #3498db; 
+                font-weight: 600;
+            }
+
+    #sidebar .side-menu.bottom {
+        padding-top: 20px;
+        border-top: 1px solid #eee; 
+    }

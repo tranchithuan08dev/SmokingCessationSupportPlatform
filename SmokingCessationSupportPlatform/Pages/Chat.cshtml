@@ -3,11 +3,10 @@
 @{
 }
 <style>
-    /* Basic Chatbox Styling */
     .chat-container {
         display: flex;
         flex-direction: column;
-        height: 80vh; /* Adjust as needed */
+        height: 80vh; 
         border: 1px solid #ccc;
         border-radius: 8px;
         overflow: hidden;
@@ -55,14 +54,14 @@
     .message.mine .message-bubble {
         background-color: #007bff;
         align-self: flex-end;
-        border-bottom-right-radius: 5px; /* Tweak for better visual */
+        border-bottom-right-radius: 5px; 
     }
 
     .message.other .message-bubble {
         background-color: #e2e3e5;
         color: #333;
         align-self: flex-start;
-        border-bottom-left-radius: 5px; /* Tweak for better visual */
+        border-bottom-left-radius: 5px; 
     }
 
     .message-info {
@@ -80,7 +79,7 @@
         font-weight: bold;
         margin-bottom: 3px;
         font-size: 0.85em;
-        color: #343a40; /* Màu tối hơn cho tên */
+        color: #343a40; 
     }
 
     .chat-input {
@@ -95,8 +94,8 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             padding: 10px;
-            resize: none; /* Disable manual resize */
-            height: 40px; /* Initial height */
+            resize: none; 
+            height: 40px; 
             line-height: 1.4;
         }
 
@@ -179,7 +178,7 @@
 
             const contentDiv = document.createElement("div");
 
-            if (!isMine) { // Chỉ hiển thị tên người gửi nếu không phải tin của mình
+            if (!isMine) { 
                 const senderNameDiv = document.createElement("div");
                 senderNameDiv.classList.add("message-sender-name");
                 senderNameDiv.textContent = message.fromName;
@@ -224,7 +223,7 @@
                 connection.invoke("JoinChat", conversationId.toString())
                     .catch(err => console.error(err.toString()));
             }
-            scrollToBottom(); // Cuộn xuống cuối khi kết nối xong và tải trang
+            scrollToBottom(); 
         }).catch(function (err) {
             console.error(err.toString());
         });

@@ -1,0 +1,65 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Coach.ChatModel
+@{
+    Layout = "_LayoutNoHeader";
+}
+@section Head {
+    <link rel="stylesheet" href="~/css/coach-dashboard.css" />
+    <link rel="stylesheet" href="~/css/chat.css" /> 
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+}
+<div class="main-content">
+    <h1>Trò chuyện với Member @(Model.Conversation?.UserId != null ? $"(ID: {Model.Conversation.UserId})" : "")</h1>
+    @* Có thể hiển thị tên member ở đây nếu bạn đã fetch thông tin user *@
+    @* <h2>Trò chuyện với: @(Model.Conversation?.User?.Username ?? "Member không xác định")</h2> *@
+
+
+    @if (Model.Conversation != null)
+    {
+        <div class="chat-container">
+            <div class="message-list">
+                @if (Model.Conversation.Messages != null && Model.Conversation.Messages.Any())
+                {
+                    @foreach (var message in Model.Conversation.Messages.OrderBy(m => m.SentAt))
+                    {
+                        <div class="message-item @(message.FromType == "Coach" ? "coach-message" : "member-message")">
+                            <div class="message-header">
+                                <span class="message-sender">
+                                    @(message.FromType == "Coach" ? "Bạn" : "Member")
+                                    @* Nếu có tên: @(message.FromType == "Coach" ? "Bạn" : message.FromName) *@
+                                </span>
+                                <span class="message-time">@message.SentAt.ToString("HH:mm dd/MM")</span>
+                            </div>
+                            <p class="message-content">@message.Content</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="no-messages">Chưa có tin nhắn nào trong cuộc trò chuyện này. Hãy gửi tin nhắn đầu tiên!</p>
+                }
+            </div>
+
+            <form method="post" class="chat-input-form">
+                <input type="hidden" asp-for="Conversation.ConversationId" />
+                <textarea asp-for="NewMessageContent" placeholder="Nhập tin nhắn của bạn..." required rows="3"></textarea>
+                <span asp-validation-for="NewMessageContent" class="text-danger"></span> <!-- Thêm dòng này -->
+                <button type="submit">Gửi</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <p>Không tìm thấy cuộc trò chuyện này.</p>
+    }
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var messageList = document.querySelector('.message-list');
+            if (messageList) {
+                messageList.scrollTop = messageList.scrollHeight;
+            }
+        });
+    </script>
+}

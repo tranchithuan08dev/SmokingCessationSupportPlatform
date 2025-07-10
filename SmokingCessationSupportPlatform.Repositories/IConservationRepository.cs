@@ -16,5 +16,7 @@ namespace SmokingCessationSupportPlatform.Repositories
         Task AddConversationAsync(Conversation conversation);
         Task UpdateConversationAsync(Conversation conversation); 
         Task DeleteConversationAsync(Conversation conversation);
+        Task<Conversation?> GetConversationByIdWithMessagesAsync(int id); 
+
     }
 }

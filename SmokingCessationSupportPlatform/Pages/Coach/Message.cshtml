@@ -1,0 +1,42 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Coach.MessageModel
+@{
+    Layout = "_LayoutNoHeader";
+
+}
+@section Head {
+    <link rel="stylesheet" href="~/css/coach-dashboard.css" />
+    <link rel="stylesheet" href="~/css/message.css" />
+}
+<div class="main-content">
+    <h1>Các Cuộc Trò Chuyện Của Bạn Với Member</h1>
+
+    @if (Model.Conversations != null && Model.Conversations.Any())
+    {
+        <div class="conversation-list">
+            @foreach (var conversation in Model.Conversations)
+            {
+                <div class="conversation-item">
+                    <div class="conversation-header">
+                        <span class="partner-name">
+                            Cuộc trò chuyện với: **Member ID @conversation.UserId**
+                            @* Nếu bạn đã tải được thông tin User và có tên: *@
+                            @* @conversation.User?.Username ?? "Member không xác định" *@
+                        </span>
+                        <span class="last-message-date">
+                            @conversation.LastMessageAt.HasValue ?
+                            conversation.LastMessageAt.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa có tin nhắn"
+                        </span>
+                    </div>
+                    <div class="conversation-preview">
+                    </div>
+                    <a asp-page="/Coach/Chat" asp-route-conversationId="@conversation.ConversationId" class="view-chat-button">Xem trò chuyện</a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Bạn chưa có cuộc trò chuyện nào với member.</p>
+    }
+</div>
