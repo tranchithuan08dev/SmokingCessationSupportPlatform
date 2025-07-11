@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SmokingCessationSupportPlatform.Repositories
 {
-    public class AccountRepository :IAccountRepository
+    public class AccountRepository : IAccountRepository
     {
-        private readonly AccountDAO _accountDAO; 
+        private readonly AccountDAO _accountDAO;
 
         public AccountRepository(AccountDAO accountDAO)
         {
@@ -62,6 +62,11 @@ namespace SmokingCessationSupportPlatform.Repositories
         {
             user.PasswordHash = newPasswordHash;
             await _accountDAO.UpdateUserAsync(user);
+        }
+
+        public User? GetUserById(int id)
+        {
+            return _accountDAO.GetUserById(id);
         }
     }
 }

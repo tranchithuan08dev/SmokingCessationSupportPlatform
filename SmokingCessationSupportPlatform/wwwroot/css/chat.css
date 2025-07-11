@@ -2,11 +2,13 @@
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 200px); /* Adjust height based on header/footer/sidebar, 200px is an estimate */
-    background-color: #f0f2f5;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    overflow: hidden; /* For message scrolling */
+    height: calc(100vh - 150px); /* Adjust height based on header/footer/sidebar, 150px is an estimate */
+    background-color: #f0f2f5; /* Light background for the chat area */
+    border-radius: 12px; /* More rounded corners for the main container */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer, more pronounced shadow */
+    overflow: hidden; /* Ensures content stays within rounded corners */
+    margin-top: 20px; /* Space from page title */
+    font-family: 'Inter', sans-serif; /* Use Inter font */
 }
 
 /* Message List Area */
@@ -14,62 +16,98 @@
     flex-grow: 1; /* Allows message list to fill available space */
     padding: 20px;
     overflow-y: auto; /* Enable scrolling for messages */
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between messages */
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Arrange messages in a column */
+    gap: 12px; /* Increased space between messages */
+    background-color: #f8f9fa; /* Slightly lighter background for message area */
+    border-radius: 8px; /* Rounded corners for the message list itself */
 }
 
 /* Individual Message Item */
-.message-item {
-    max-width: 75%; /* Limit message bubble width */
-    padding: 10px 15px;
-    border-radius: 15px;
+.message {
+    display: flex; /* Make message itself a flex container for alignment */
+    margin-bottom: 0; /* No margin-bottom here, gap handles spacing */
+    max-width: 85%; /* Allow messages to take more width */
+    position: relative; /* For potential future features like read receipts */
+}
+
+/* Style for messages sent by the current user */
+.message.mine {
+    justify-content: flex-end; /* Align content to the right */
+    align-self: flex-end; /* Align the message block to the right within message-list */
+}
+
+/* Style for messages sent by the other user/coach */
+.message.other {
+    justify-content: flex-start; /* Align content to the left */
+    align-self: flex-start; /* Align the message block to the left within message-list */
+}
+
+/* Style for the message bubble itself */
+.message .message-bubble {
+    padding: 12px 18px; /* More padding for a softer look */
+    border-radius: 20px; /* Fully rounded bubble corners */
     word-wrap: break-word; /* Wrap long words */
-}
-
-/* Style for messages sent by the Coach */
-.coach-message {
-    background-color: #e0f2f7; /* Light blue */
-    color: #333;
-    align-self: flex-end; /* Align to the right */
-    border-bottom-right-radius: 0; /* Make corner sharp towards sender */
-}
-
-/* Style for messages sent by the Member */
-.member-message {
-    background-color: #dcf8c6; /* Light green */
-    color: #333;
-    align-self: flex-start; /* Align to the left */
-    border-bottom-left-radius: 0; /* Make corner sharp towards sender */
-}
-
-.message-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 5px;
-}
-
-.message-sender {
-    font-weight: bold;
-    font-size: 14px;
-    color: #555;
-}
-
-.message-time {
-    font-size: 11px;
-    color: #999;
-}
-
-.message-content {
-    margin: 0;
+    line-height: 1.5; /* Better readability */
     font-size: 15px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.message.mine .message-bubble {
+    background-color: #007bff; /* Primary blue for sender's messages */
+    color: white;
+    border-bottom-right-radius: 5px; /* Slightly less rounded at the bottom-right for sender */
+    background: linear-gradient(135deg, #007bff, #0056b3); /* Gradient for a modern look */
+}
+
+.message.other .message-bubble {
+    background-color: #e2e3e5; /* Light gray for receiver's messages */
+    color: #333;
+    border-bottom-left-radius: 5px; /* Slightly less rounded at the bottom-left for receiver */
+    background: linear-gradient(135deg, #e2e3e5, #d0d2d6); /* Subtle gray gradient */
+}
+
+/* Message header (sender name and time) */
+/* This div wraps sender name, bubble, and info. The inner div in HTML is still present. */
+.message > div {
+    display: flex;
+    flex-direction: column;
+    /* No specific width, let content define it, up to max-width of .message */
+}
+
+.message-sender-name {
+    font-weight: 600; /* Bolder font for sender name */
+    font-size: 13px;
+    color: #444; /* Darker color for sender name */
+    margin-bottom: 4px; /* Space between name and bubble */
+    padding-left: 10px; /* Indent sender name slightly */
+}
+
+.message.mine .message-sender-name {
+    text-align: right; /* Align sender name to the right for own messages */
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+.message-info {
+    font-size: 10px; /* Smaller font for time */
+    color: #888; /* Softer color for time */
+    margin-top: 4px; /* Space between bubble and time */
+    text-align: right; /* Default align time to the right */
+    padding-right: 10px; /* Indent time slightly */
+}
+
+.message.other .message-info {
+    text-align: left; /* Align time to the left for other's messages */
+    padding-left: 10px;
+    padding-right: 0;
 }
 
 .no-messages {
     text-align: center;
     color: #888;
     padding: 20px;
+    font-style: italic;
 }
 
 /* Chat Input Form */
@@ -77,37 +115,58 @@
     display: flex;
     padding: 15px 20px;
     border-top: 1px solid #e0e0e0;
-    background-color: #fff;
+    background-color: #ffffff; /* White background for input area */
     gap: 10px;
+    align-items: center; /* Vertically align items in the input form */
 }
 
-    .chat-input-form textarea {
-        flex-grow: 1; /* Textarea takes up most space */
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        padding: 10px 15px;
-        font-size: 15px;
-        resize: none; /* Disable manual resizing */
-        outline: none;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
+.chat-input-form textarea {
+    flex-grow: 1;
+    border: 1px solid #cdd4da; /* Softer border color */
+    border-radius: 25px; /* More rounded input field */
+    padding: 12px 18px; /* More padding */
+    font-size: 15px;
+    resize: none;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); /* Slightly stronger inner shadow */
+    transition: border-color 0.2s, box-shadow 0.2s; /* Smooth transitions */
+}
 
-        .chat-input-form textarea:focus {
-            border-color: #3498db;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 2px rgba(52, 152, 219, 0.2);
-        }
+.chat-input-form textarea:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(0, 123, 255, 0.25); /* Glow effect on focus */
+}
 
-    .chat-input-form button {
-        background-color: #3498db; /* Blue send button */
-        color: white;
-        border: none;
-        border-radius: 20px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
+.chat-input-form button {
+    background-color: #28a745; /* Green send button */
+    color: white;
+    border: none;
+    border-radius: 25px; /* More rounded button */
+    padding: 12px 25px; /* More padding for button */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease; /* Add transform for click effect */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Shadow for button */
+}
 
-        .chat-input-form button:hover {
-            background-color: #2980b9; /* Darker blue on hover */
-        }
+.chat-input-form button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-1px); /* Slight lift on hover */
+}
+
+.chat-input-form button:active {
+    transform: translateY(0); /* Press effect */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Alert for error messages */
+.alert.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}

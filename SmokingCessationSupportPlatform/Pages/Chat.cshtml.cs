@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+Ôªøusing Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SmokingCessationSupportPlatform.BusinessObjects.DTO;
 using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.Services;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace SmokingCessationSupportPlatform.Web.Pages
@@ -10,123 +11,162 @@ namespace SmokingCessationSupportPlatform.Web.Pages
     public class ChatModel : PageModel
     {
         private readonly IChatService _chatService;
-        private readonly ILogger<ChatModel> _logger; // –? ghi log l?i
+        private readonly ILogger<ChatModel> _logger;
 
-        [BindProperty] // D˘ng ? binding d? li?u t? form n?u c?n (vÌ d?: g?i tin nh?n)
+        [BindProperty]
+        [Required(ErrorMessage = "Tin nh·∫Øn kh√¥ng ƒë∆∞·ª£c ƒë·ªÉ tr·ªëng.")]
         public string MessageContent { get; set; } = string.Empty;
 
         public int CurrentUserId { get; set; }
-        public string CurrentUserType { get; set; } = string.Empty; // "User" ho?c "Coach"
-        public int PartnerId { get; set; } // ID c?a ng˝?i d˘ng/coach m‡ b?n ang chat c˘ng
-        public string PartnerType { get; set; } = string.Empty; // "User" ho?c "Coach"
-        public int ConversationId { get; set; }
+        public string CurrentUserType { get; set; } = string.Empty; 
+
+        [BindProperty]
+        public int PartnerId { get; set; } 
+        [BindProperty]
+        public string PartnerType { get; set; } = string.Empty; 
+
+        [BindProperty] 
+        public int ConversationId { get; set; } 
 
         public List<MessageViewModel> Messages { get; set; } = new List<MessageViewModel>();
 
-        // Constructor ? inject ChatService
         public ChatModel(IChatService chatService, ILogger<ChatModel> logger)
         {
             _chatService = chatService;
             _logger = logger;
         }
 
-        // Handler cho GET request khi t?i trang chat
         public async Task<IActionResult> OnGetAsync(int partnerId, string partnerType)
         {
-            // L?y thÙng tin ng˝?i d˘ng hi?n t?i t? Claims
-            // B?n c?n i?u ch?nh logic n‡y ? l?y ˙ng UserId/CoachId v‡ UserType c?a b?n
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier); // Gi? s? UserId/CoachId ˝?c l˝u trong NameIdentifier
-            var userRoleClaim = User.FindFirst(ClaimTypes.Role);         // Gi? s? Role ˝?c l˝u trong ClaimTypes.Role
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userRoleClaim = User.FindFirst(ClaimTypes.Role);
 
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int currentId))
             {
-                return RedirectToPage("/Account/Login"); // Ho?c tr? v? l?i
+                _logger.LogWarning("OnGetAsync: User ID claim not found or invalid. Redirecting to login.");
+                return RedirectToPage("/Account/Login");
             }
 
             CurrentUserId = currentId;
-            CurrentUserType = userRoleClaim?.Value ?? "Member"; // M?c ?nh l‡ "User" n?u khÙng cÛ role
+            CurrentUserType = userRoleClaim?.Value ?? "User";
+            if (CurrentUserType.Equals("Member", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "User";
+            if (CurrentUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "Coach";
 
-            PartnerId = partnerId;
-            PartnerType = partnerType;
+            this.PartnerId = partnerId;
+            this.PartnerType = partnerType;
 
-            if (PartnerId == 0 || string.IsNullOrEmpty(PartnerType))
+            if (this.PartnerId == 0 || string.IsNullOrEmpty(this.PartnerType) || (!this.PartnerType.Equals("User", StringComparison.OrdinalIgnoreCase) && !this.PartnerType.Equals("Coach", StringComparison.OrdinalIgnoreCase)))
             {
-                // X? l? tr˝?ng h?p khÙng cÛ partnerId ho?c partnerType (vÌ d?: hi?n th? danh s·ch c·c cu?c tr? chuy?n)
-                // Hi?n t?i, ch˙ng ta s? ın gi?n chuy?n h˝?ng v? m?t trang l?i ho?c trang danh s·ch chat
-                return RedirectToPage("/Error"); // Ho?c trang danh s·ch chat c?a b?n
+                _logger.LogWarning($"OnGetAsync: Missing or invalid partnerId or partnerType. PartnerId: {this.PartnerId}, PartnerType: {this.PartnerType}");
+                if (CurrentUserType == "Coach")
+                {
+                    return RedirectToPage("/Coach/Message");
+                }
+                else 
+                {
+                    return RedirectToPage("/User/FindCoach");
+                }
             }
 
             try
             {
                 Conversation conversation;
 
-                // Logic ? t?o ho?c l?y ConversationId
-                if ((CurrentUserType == "User" || CurrentUserType == "Member") && PartnerType == "Coach")
+                if (CurrentUserType == "User" && PartnerType == "Coach")
                 {
                     conversation = await _chatService.GetOrCreateConversationAsync(CurrentUserId, PartnerId);
                 }
-                else if (CurrentUserType == "Coach" && (PartnerType == "User" || PartnerType == "Member"))
+                else if (CurrentUserType == "Coach" && PartnerType == "User")
                 {
-                    conversation = await _chatService.GetOrCreateConversationAsync(PartnerId, CurrentUserId); // User l‡ PartnerId, Coach l‡ CurrentUserId
+                    conversation = await _chatService.GetOrCreateConversationAsync(PartnerId, CurrentUserId);
                 }
                 else
                 {
-                    // Tr˝?ng h?p User chat v?i User ho?c Coach chat v?i Coach (hi?n t?i khÙng ˝?c h? tr? theo Conversation Model)
-                    _logger.LogWarning($"Unsupported chat type: CurrentUserType={CurrentUserType}, PartnerType={PartnerType}");
-                    return RedirectToPage("/Error", new { message = "Lo?i cu?c tr? chuy?n khÙng ˝?c h? tr?." });
+                    _logger.LogWarning($"OnGetAsync: Unsupported chat type: CurrentUserType={CurrentUserType}, PartnerType={PartnerType}");
+                    return RedirectToPage("/Error", new { message = "Lo·∫°i cu·ªôc tr√≤ chuy·ªán kh√¥ng ƒë∆∞·ª£c h·ªó tr·ª£." });
                 }
 
-                ConversationId = conversation.ConversationId;
+                this.ConversationId = conversation.ConversationId; 
 
-                // L?y tin nh?n hi?n cÛ
-                Messages = await _chatService.GetConversationMessagesWithSenderInfoAsync(ConversationId);
-
-                // –·nh d?u tin nh?n l‡ ? ?c cho ng˝?i nh?n hi?n t?i
-                await _chatService.MarkMessagesAsReadAsync(ConversationId, CurrentUserId, CurrentUserType);
+                Messages = await _chatService.GetConversationMessagesWithSenderInfoAsync(this.ConversationId);
+                await _chatService.MarkMessagesAsReadAsync(this.ConversationId, CurrentUserId, CurrentUserType);
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "L?i khi t?i trang chat.");
-                return RedirectToPage("/Error", new { message = "–? x?y ra l?i khi t?i cu?c tr? chuy?n." });
+                _logger.LogError(ex, "OnGetAsync: L·ªói khi t·∫£i trang chat.");
+                return RedirectToPage("/Error", new { message = "ƒê√£ x·∫£y ra l·ªói khi t·∫£i cu·ªôc tr√≤ chuy·ªán." });
             }
 
             return Page();
         }
 
-        // Handler cho POST request khi g?i tin nh?n t? form (cÛ th? thay th? b?ng SignalR tr?c ti?p)
-        public async Task<IActionResult> OnPostSendMessageAsync(int conversationId, int fromId, string fromType, int toId, string toType)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (string.IsNullOrWhiteSpace(MessageContent))
+            _logger.LogInformation("OnPostAsync: Form submitted.");
+            _logger.LogInformation($"OnPostAsync: MessageContent from form: '{MessageContent}'");
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userRoleClaim = User.FindFirst(ClaimTypes.Role);
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int currentId))
             {
-                TempData["ErrorMessage"] = "Tin nh?n khÙng ˝?c ? tr?ng.";
-                // T?i l?i trang v?i d? li?u hi?n cÛ
-                return await OnGetAsync(toId, toType);
+                _logger.LogWarning("OnPostAsync: User ID claim not found or invalid during POST. Redirecting to login.");
+                return RedirectToPage("/Account/Login");
             }
+
+            CurrentUserId = currentId;
+            CurrentUserType = userRoleClaim?.Value ?? "User";
+            if (CurrentUserType.Equals("Member", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "User";
+            if (CurrentUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "Coach";
+
+            _logger.LogInformation($"OnPostAsync: ConversationId: {ConversationId}, PartnerId: {PartnerId}, PartnerType: {PartnerType}");
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("OnPostAsync: ModelState is NOT valid.");
+                foreach (var modelStateEntry in ModelState.Values)
+                {
+                    foreach (var error in modelStateEntry.Errors)
+                    {
+                        _logger.LogError($"OnPostAsync: Validation Error: {error.ErrorMessage}");
+                    }
+                }
+
+                return await OnGetAsync(PartnerId, PartnerType);
+            }
+            _logger.LogInformation("OnPostAsync: ModelState is valid.");
 
             try
             {
-                var sentMessage = await _chatService.SendMessageAsync(conversationId, fromId, fromType, toId, toType, MessageContent);
+                var sentMessage = await _chatService.SendMessageAsync(
+                    ConversationId,
+                    CurrentUserId,
+                    CurrentUserType,
+                    PartnerId,
+                    PartnerType,
+                    MessageContent
+                );
 
                 if (sentMessage != null)
                 {
-                    MessageContent = string.Empty; // XÛa n?i dung tin nh?n sau khi g?i
+                    MessageContent = string.Empty; 
+                    _logger.LogInformation($"OnPostAsync: Message sent successfully. MessageId: {sentMessage.MessageId}");
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "KhÙng th? g?i tin nh?n.";
+                    TempData["ErrorMessage"] = "Kh√¥ng th·ªÉ g·ª≠i tin nh·∫Øn. D·ªãch v·ª• tr·∫£ v·ªÅ null.";
+                    _logger.LogError("OnPostAsync: SendMessageAsync returned null.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "L?i khi g?i tin nh?n.");
-                TempData["ErrorMessage"] = "–? x?y ra l?i khi g?i tin nh?n.";
+                _logger.LogError(ex, "OnPostAsync: L·ªói khi g·ª≠i tin nh·∫Øn.");
+                TempData["ErrorMessage"] = "ƒê√£ x·∫£y ra l·ªói khi g·ª≠i tin nh·∫Øn.";
             }
 
-            // Chuy?n h˝?ng tr? l?i trang chat ? t?i l?i tin nh?n ? g?i
-            return RedirectToPage("/Chat", new { partnerId = toId, partnerType = toType });
-            // Ho?c, n?u mu?n tr·nh redirect, b?n c?n c?p nh?t Messages list v‡ tr? v? Page()
-            // Tuy nhiÍn, vi?c redirect l‡ c·ch ın gi?n hın ? ?m b?o tr?ng th·i UI ˝?c ?ng b?
+
+            return RedirectToPage("/Chat", new { partnerId = PartnerId, partnerType = PartnerType });
         }
     }
 }

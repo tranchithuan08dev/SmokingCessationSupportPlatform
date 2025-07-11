@@ -10,9 +10,6 @@
 }
 <div class="main-content">
     <h1>Trò chuyện với Member @(Model.Conversation?.UserId != null ? $"(ID: {Model.Conversation.UserId})" : "")</h1>
-    @* Có thể hiển thị tên member ở đây nếu bạn đã fetch thông tin user *@
-    @* <h2>Trò chuyện với: @(Model.Conversation?.User?.Username ?? "Member không xác định")</h2> *@
-
 
     @if (Model.Conversation != null)
     {
@@ -26,7 +23,6 @@
                             <div class="message-header">
                                 <span class="message-sender">
                                     @(message.FromType == "Coach" ? "Bạn" : "Member")
-                                    @* Nếu có tên: @(message.FromType == "Coach" ? "Bạn" : message.FromName) *@
                                 </span>
                                 <span class="message-time">@message.SentAt.ToString("HH:mm dd/MM")</span>
                             </div>
@@ -43,7 +39,7 @@
             <form method="post" class="chat-input-form">
                 <input type="hidden" asp-for="Conversation.ConversationId" />
                 <textarea asp-for="NewMessageContent" placeholder="Nhập tin nhắn của bạn..." required rows="3"></textarea>
-                <span asp-validation-for="NewMessageContent" class="text-danger"></span> <!-- Thêm dòng này -->
+                <span asp-validation-for="NewMessageContent" class="text-danger"></span> 
                 <button type="submit">Gửi</button>
             </form>
         </div>

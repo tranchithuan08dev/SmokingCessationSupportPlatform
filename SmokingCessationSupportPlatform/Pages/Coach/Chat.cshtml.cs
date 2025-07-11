@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.Services;
@@ -15,14 +15,14 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
         private readonly IChatService _chatService;
         private readonly ILogger<ChatModel> _logger;
 
-        public Conversation Conversation { get; set; } // This is for display, populated in OnGet/OnPost error path
+        public Conversation Conversation { get; set; } 
 
         [BindProperty]
-        [Required(ErrorMessage = "Tin nh?n không ðý?c ð? tr?ng.")]
+        [Required(ErrorMessage = "Tin nháº¯n khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng.")]
         public string NewMessageContent { get; set; } = string.Empty;
 
-        [BindProperty] // Added BindProperty for ConversationId to ensure it's always bound from the form
-        public int ConversationId { get; set; } // This will be bound from the hidden input
+        [BindProperty] 
+        public int ConversationId { get; set; }
 
         public int CoachId { get; set; }
 
@@ -52,8 +52,7 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
                 return NotFound();
             }
 
-            // Ensure ConversationId is set for the hidden input in the form
-            this.ConversationId = conversationId; // <--- Make sure this is set in OnGet
+            this.ConversationId = conversationId; 
 
             return Page();
         }
@@ -61,7 +60,7 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
         public async Task<IActionResult> OnPostAsync()
         {
             _logger.LogInformation("OnPostAsync: Form submitted.");
-            _logger.LogInformation($"OnPostAsync: ConversationId from form: {ConversationId}"); // Now directly access ConversationId
+            _logger.LogInformation($"OnPostAsync: ConversationId from form: {ConversationId}"); 
             _logger.LogInformation($"OnPostAsync: NewMessageContent from form: '{NewMessageContent}'");
 
             var coachIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -73,8 +72,7 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
             CoachId = currentCoachId;
             _logger.LogInformation($"OnPostAsync: Current CoachId: {CoachId}");
 
-            // IMPORTANT: If ModelState.IsValid is false, you MUST re-populate the 'Conversation' property
-            // before returning Page(), otherwise the view will throw NullReferenceException.
+
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("OnPostAsync: ModelState is NOT valid.");
@@ -92,14 +90,12 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
                         _logger.LogError($"OnPostAsync: Validation Error for {key}: {ModelState[key].Errors.First().ErrorMessage}");
                     }
                 }
-                // Re-populate Conversation for display when validation fails
-                Conversation = await _chatService.GetConversationByIdAsync(this.ConversationId); // Use this.ConversationId from BindProperty
+                Conversation = await _chatService.GetConversationByIdAsync(this.ConversationId); 
                 return Page();
             }
             _logger.LogInformation("OnPostAsync: ModelState is valid.");
 
-            // L?y thông tin cu?c tr? chuy?n hi?n t?i t? database
-            var existingConversation = await _chatService.GetConversationByIdAsync(this.ConversationId); // Use this.ConversationId
+            var existingConversation = await _chatService.GetConversationByIdAsync(this.ConversationId);
             _logger.LogInformation($"OnPostAsync: Existing conversation retrieved: {existingConversation != null}");
 
             if (existingConversation == null || existingConversation.CoachId != CoachId)
@@ -119,8 +115,6 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
             );
             _logger.LogInformation($"OnPostAsync: Message sent. SentMessageViewModel is null: {sentMessage == null}");
 
-            // Chuy?n hý?ng tr? l?i trang chat ð? hi?n th? tin nh?n m?i
-            // This RedirectToPage will trigger a new OnGetAsync, which will correctly populate 'Conversation'
             return RedirectToPage("/Coach/Chat", new { conversationId = existingConversation.ConversationId });
         }
     }

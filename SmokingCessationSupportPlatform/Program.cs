@@ -37,6 +37,7 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IUserAuthentification, UserAuthentification>();
             builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
