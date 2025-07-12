@@ -1,0 +1,60 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.QuitProcess.IndexModel
+@{
+	ViewData["Title"] = "Quit Process";
+}
+
+
+<div class="container py-5">
+    <div class="progress-card">
+        <div class="progress-header">
+            <h2 class="mb-0"><i class="fas fa-heartbeat me-2"></i> Theo Dõi Tiến Trình Cai Thuốc</h2>
+        </div>
+
+        <div class="progress-body">
+            <form method="post">
+                <div class="form-group">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="https://placehold.co/30x30" alt="Biểu tượng điếu thuốc bị gạch chéo màu đỏ" class="cigarette-icon">
+                        <label asp-for="Progress.CigarettesSmoked" class="form-label">Số điếu thuốc KHÔNG hút hôm nay</label>
+                    </div>
+                    <input asp-for="Progress.CigarettesSmoked" type="number" class="form-control" placeholder="Ví dụ: 10" min="0" />
+                    <small class="text-muted">Hãy tự hào vì mỗi điếu thuốc bạn không hút!</small>
+                    <span asp-validation-for="Progress.CigarettesSmoked" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="https://placehold.co/30x30" alt="Biểu tượng trái tim khỏe mạnh màu xanh lá" class="health-icon">
+                        <label asp-for="Progress.HealthStatus" class="form-label">Tình trạng sức khỏe hôm nay</label>
+                    </div>
+                    <input asp-for="Progress.HealthStatus" class="form-control" placeholder="Ví dụ: Dễ chịu, thở tốt hơn" />
+                    <span asp-validation-for="Progress.HealthStatus" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="https://placehold.co/30x30" alt="Biểu tượng ghi chú màu xanh dương" class="note-icon">
+                        <label asp-for="Progress.Notes" class="form-label">Ghi chú và cảm nhận</label>
+                    </div>
+                    <textarea asp-for="Progress.Notes" class="form-control" rows="4" placeholder="Ghi lại cảm xúc, khó khăn hay thành công của bạn..."></textarea>
+                    <span asp-validation-for="Progress.Notes" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-submit text-white w-100 mt-4">
+                    <i class="fas fa-save me-2"></i> Lưu Tiến Trình
+                </button>
+
+                <p class="motivation-text mt-3">
+                    "Mỗi ngày không thuốc lá là một ngày chiến thắng! Bạn đang làm rất tốt!"
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        // This partial view enables client-side validation using jQuery Validation
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
