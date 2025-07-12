@@ -3,7 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using SmokingCessationSupportPlatform.DataAccessObjects;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
 using SmokingCessationSupportPlatform.Repositories;
+using SmokingCessationSupportPlatform.Repositories.Implementations;
 using SmokingCessationSupportPlatform.Services;
+using SmokingCessationSupportPlatform.Services.Implementations;
+using SmokingCessationSupportPlatform.Services.Interfaces;
 
 namespace SmokingCessationSupportPlatform
 {
@@ -26,6 +29,11 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddTransient<IEmailService, EmailService>();
+            // Quit Process Services
+            builder.Services.AddScoped<QuitProcessRepository>();
+            builder.Services.AddScoped<IQuitProcessService, QuitProcessService>();
+
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
