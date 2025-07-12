@@ -17,5 +17,8 @@ namespace SmokingCessationSupportPlatform.Repositories.Implementations
         {
            QuitProcessDAO.CreateQuitProcess(quitProgress);
         }
+
+        public List<QuitProgress> GetListQuitProgresses(int userId)
+       => QuitProcessDAO.GetQuitProgresses(userId);
     }
 }

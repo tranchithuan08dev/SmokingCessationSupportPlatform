@@ -10,5 +10,7 @@ namespace SmokingCessationSupportPlatform.Repositories.Interfaces
     public interface IQuitProcessRepository
     {
        void  CreateQuitProcess(QuitProgress quitProgress);
+
+        List<QuitProgress> GetListQuitProgresses(int userId);
     }
 }
