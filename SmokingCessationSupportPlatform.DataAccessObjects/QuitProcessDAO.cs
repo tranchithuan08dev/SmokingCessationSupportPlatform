@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SmokingCessationSupportPlatform.DataAccessObjects
 {
       public class QuitProcessDAO
-      {
+    {
         // Ghi lại quá trình bỏ thuốc lá của người dùng 
         public static void CreateQuitProcess(QuitProgress quitProgress)
         {
@@ -24,5 +24,27 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects
                 Console.WriteLine($"Error creating quit process: {ex.Message}");
             }
         }
-      }
+
+
+        public static List<QuitProgress> GetQuitProgresses(int UserID)
+        {
+            var listQuitProgresses = new List<QuitProgress>();
+
+            try
+            {
+                using var context = new SmokingCessationSupportPlatformContext();
+                listQuitProgresses = context.QuitProgresses
+                                      .Where(qp => qp.UserId == UserID)
+                                      .ToList();
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return listQuitProgresses;
+        }
+
+    }
 }
