@@ -11,5 +11,6 @@ namespace SmokingCessationSupportPlatform.Services.Interfaces
     {
         void CreateQuitProcess(QuitProgress quitProcess);
 
+        List<QuitProgress> GetListQuitProgresses(int userId);
     }
 }
