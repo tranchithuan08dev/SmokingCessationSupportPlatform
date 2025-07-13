@@ -18,7 +18,6 @@ public class PaymentViewModel
     public string PaymentMethod { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Vui lòng nhập số thẻ")]
-    [RegularExpression(@"^\d{16}$", ErrorMessage = "Số thẻ phải có 16 chữ số")]
     public string CardNumber { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Vui lòng nhập tên chủ thẻ")]

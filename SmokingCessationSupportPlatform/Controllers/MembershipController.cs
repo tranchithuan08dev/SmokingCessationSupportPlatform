@@ -52,7 +52,15 @@ public class MembershipController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Subscribe(PaymentViewModel model)
-    {
+    {       
+        if (!string.IsNullOrEmpty(model.CardNumber))
+        {
+            model.CardNumber = model.CardNumber.Replace(" ", "");
+            if (model.CardNumber.Length != 16 || !model.CardNumber.All(char.IsDigit))
+            {
+                ModelState.AddModelError("CardNumber", "Số thẻ phải có 16 chữ số");
+            }
+        }
         if (!ModelState.IsValid)
         {
             var plan = await _membershipService.GetPlanByIdAsync(model.PlanId);
