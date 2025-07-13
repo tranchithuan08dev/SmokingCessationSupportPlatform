@@ -114,8 +114,9 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
                 NewMessageContent
             );
             _logger.LogInformation($"OnPostAsync: Message sent. SentMessageViewModel is null: {sentMessage == null}");
-
-            return RedirectToPage("/Coach/Chat", new { conversationId = existingConversation.ConversationId });
+            NewMessageContent = string.Empty;
+            Conversation = await _chatService.GetConversationByIdAsync(this.ConversationId);
+            return Page();
         }
     }
 }

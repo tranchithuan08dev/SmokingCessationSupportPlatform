@@ -19,7 +19,7 @@
     @if (Model.ConversationId != 0) 
     {
         <div class="chat-container">
-            <div class="message-list" id="messagesList">
+            <div class="message-list" id="messagesList" >
                 @if (Model.Messages != null && Model.Messages.Any())
                 {
                     @foreach (var message in Model.Messages.OrderBy(m => m.SentAt))
@@ -49,13 +49,15 @@
                 }
             </div>
 
-            <form method="post" asp-page-handler="OnPostAsync" class="chat-input-form">
-                <textarea asp-for="MessageContent" placeholder="Nhập tin nhắn của bạn..." required rows="3"></textarea>
-                <span asp-validation-for="MessageContent" class="text-danger"></span>
+            <form method="post" id="chatForm" asp-page-handler="OnPostAsync" class="chat-input-form">
+                <textarea id="messageContentInput" asp-for="MessageContent" placeholder="Nhập tin nhắn của bạn..." required rows="3"></textarea>
+                <span id="messageContentValidation" class="text-danger"></span>
 
-                <input type="hidden" asp-for="ConversationId" />
-                <input type="hidden" asp-for="PartnerId" />
-                <input type="hidden" asp-for="PartnerType" />
+                <input type="hidden" id="conversationId" value="@Model.ConversationId" />
+                <input type="hidden" id="partnerId" value="@Model.PartnerId" />
+                <input type="hidden" id="partnerType" value="@Model.PartnerType" />
+                <input type="hidden" id="currentUserId" value="@Model.CurrentUserId" />
+                <input type="hidden" id="currentUserType" value="@Model.CurrentUserType" />
 
                 <button type="submit">Gửi</button>
             </form>
@@ -70,13 +72,17 @@
 @section Scripts {
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/chatHub") 
-            .withAutomaticReconnect()
-            .build();
+        const currentConversationId = parseInt(document.getElementById('conversationId').value);
+        const currentUserId = parseInt(document.getElementById('currentUserId').value);
+        const currentUserType = document.getElementById('currentUserType').value;
+        const partnerId = parseInt(document.getElementById('partnerId').value);
+        const partnerType = document.getElementById('partnerType').value;
 
-        const messagesList = document.getElementById("messagesList");
-        const chatInput = document.querySelector(".chat-input-form textarea");
+
+         const messagesList = document.getElementById("messagesList");
+        const chatForm = document.getElementById("chatForm");
+        const messageContentInput = document.getElementById("messageContentInput");
+        const messageContentValidationSpan = document.getElementById("messageContentValidation");
 
         function scrollToBottom() {
             if (messagesList) {
@@ -84,17 +90,30 @@
             }
         }
 
-        
-        function appendMessage(message, isMine) {
+         const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .withAutomaticReconnect()
+            .build();
+
+        // Function to append a new message to the UI
+        function appendMessage(message) {
+            // Remove "no messages" paragraph if it exists
+            const noMessagesParagraph = messagesList.querySelector('.no-messages');
+            if (noMessagesParagraph) {
+                noMessagesParagraph.remove();
+            }
+
             const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message", isMine ? "mine" : "other");
+            // Determine if it's my message (sent by the current user)
+            const isMyMessage = (message.fromId === currentUserId && message.fromType === currentUserType);
+            messageDiv.classList.add("message", isMyMessage ? "mine" : "other");
 
             const contentDiv = document.createElement("div");
 
-            if (!isMine) { 
+            if (!isMyMessage) {
                 const senderNameDiv = document.createElement("div");
                 senderNameDiv.classList.add("message-sender-name");
-                senderNameDiv.textContent = message.fromName; 
+                senderNameDiv.textContent = message.fromName;
                 contentDiv.appendChild(senderNameDiv);
             }
 
@@ -104,8 +123,16 @@
 
             const infoDiv = document.createElement("div");
             infoDiv.classList.add("message-info");
-            const sentAt = new Date(message.sentAt);
-            infoDiv.textContent = sentAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + (isMine && message.isRead ? " ✔️" : "");
+            const sentAt = new Date(message.sentAt); // message.sentAt should be an ISO string or Date object
+            // Format time and date
+            let timeString = sentAt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            let dateString = sentAt.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+            infoDiv.textContent = `${timeString} ${dateString}`;
+
+            // Add read receipt checkmark for my messages
+            if (isMyMessage && message.isRead) {
+                infoDiv.textContent += " ✔️";
+            }
 
             contentDiv.appendChild(bubbleDiv);
             contentDiv.appendChild(infoDiv);
@@ -114,38 +141,156 @@
             scrollToBottom();
         }
 
+        // --- Event Handlers ---
+
         connection.on("ReceiveMessage", function (message) {
-            const currentUserId = @Model.CurrentUserId;
-            const currentUserType = "@Model.CurrentUserType";
-            const isMine = (message.fromId === currentUserId && message.fromType === currentUserType);
+            console.log("Received message:", message);
+            if (message.conversationId === currentConversationId) {
+                appendMessage(message);
 
-            if (message.conversationId === @Model.ConversationId) {
-                appendMessage(message, isMine);
-
-                if (!isMine) { 
+                const isMyMessage = (message.fromId === currentUserId && message.fromType === currentUserType);
+                if (!isMyMessage) {
                     connection.invoke("MarkMessagesAsRead", message.conversationId, currentUserId, currentUserType)
-                        .catch(err => console.error(err.toString()));
+                        .catch(err => console.error("Error marking message as read:", err.toString()));
                 }
             }
         });
 
-        connection.start().then(function () {
-            console.log("SignalR Connected!");
-            const conversationId = @Model.ConversationId;
-            if (conversationId) {
-                connection.invoke("JoinChat", conversationId.toString())
-                    .catch(err => console.error(err.toString()));
-            }
-            scrollToBottom(); 
-        }).catch(function (err) {
-            console.error(err.toString());
-        });
+        if (chatForm && messageContentInput) {
+            chatForm.addEventListener('submit', async function (event) {
+                event.preventDefault(); 
 
-        if (chatInput) {
-            chatInput.addEventListener('input', function () {
+                const messageContent = messageContentInput.value.trim();
+
+                if (!messageContent) {
+                    if (messageContentValidationSpan) {
+                        messageContentValidationSpan.textContent = "Tin nhắn không được để trống.";
+                    }
+                    return; 
+                } else {
+                    if (messageContentValidationSpan) {
+                        messageContentValidationSpan.textContent = ""; 
+                    }
+                }
+
+                try {
+                    await connection.invoke("SendMessageToUser",
+                        currentConversationId,
+                        currentUserType, 
+                        messageContent,
+                        currentUserId,
+                        partnerType,
+                        partnerId
+                    );
+
+                    messageContentInput.value = "";
+                    messageContentInput.style.height = 'auto'; 
+
+                } catch (err) {
+                    console.error("Error sending message via SignalR:", err.toString());
+                    if (messageContentValidationSpan) {
+                        messageContentValidationSpan.textContent = "Gửi tin nhắn thất bại. Vui lòng thử lại.";
+                    }
+                }
+            });
+        }
+
+        if (messageContentInput) {
+            messageContentInput.addEventListener('input', function () {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
         }
+
+        connection.start().then(function () {
+            console.log("SignalR Connected!");
+            if (currentConversationId !== 0) { 
+                connection.invoke("JoinChat", currentConversationId.toString())
+                    .catch(err => console.error("Error joining chat group:", err.toString()));
+            }
+            scrollToBottom(); 
+        }).catch(function (err) {
+            console.error("SignalR Connection Error:", err.toString());
+        });
+
+        document.addEventListener('DOMContentLoaded', scrollToBottom);
+
+        // const connection = new signalR.HubConnectionBuilder()
+        //     .withUrl("/chatHub") 
+        //     .withAutomaticReconnect()
+        //     .build();
+
+        // const messagesList = document.getElementById("messagesList");
+        // const chatInput = document.querySelector(".chat-input-form textarea");
+
+        // function scrollToBottom() {
+        //     if (messagesList) {
+        //         messagesList.scrollTop = messagesList.scrollHeight;
+        //     }
+        // }
+
+        
+        // function appendMessage(message, isMine) {
+        //     const messageDiv = document.createElement("div");
+        //     messageDiv.classList.add("message", isMine ? "mine" : "other");
+
+        //     const contentDiv = document.createElement("div");
+
+        //     if (!isMine) { 
+        //         const senderNameDiv = document.createElement("div");
+        //         senderNameDiv.classList.add("message-sender-name");
+        //         senderNameDiv.textContent = message.fromName; 
+        //         contentDiv.appendChild(senderNameDiv);
+        //     }
+
+        //     const bubbleDiv = document.createElement("div");
+        //     bubbleDiv.classList.add("message-bubble");
+        //     bubbleDiv.textContent = message.content;
+
+        //     const infoDiv = document.createElement("div");
+        //     infoDiv.classList.add("message-info");
+        //     const sentAt = new Date(message.sentAt);
+        //     infoDiv.textContent = sentAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + (isMine && message.isRead ? " ✔️" : "");
+
+        //     contentDiv.appendChild(bubbleDiv);
+        //     contentDiv.appendChild(infoDiv);
+        //     messageDiv.appendChild(contentDiv);
+        //     messagesList.appendChild(messageDiv);
+        //     scrollToBottom();
+        // }
+
+        // connection.on("ReceiveMessage", function (message) {
+        //     const currentUserId = @Model.CurrentUserId;
+        //     const currentUserType = "@Model.CurrentUserType";
+        //     const isMine = (message.fromId === currentUserId && message.fromType === currentUserType);
+
+        //     if (message.conversationId === @Model.ConversationId) {
+        //         appendMessage(message, isMine);
+
+        //         if (!isMine) { 
+        //             connection.invoke("MarkMessagesAsRead", message.conversationId, currentUserId, currentUserType)
+        //                 .catch(err => console.error(err.toString()));
+        //         }
+        //     }
+        // });
+
+        // connection.start().then(function () {
+        //     console.log("SignalR Connected!");
+        //     const conversationId = @Model.ConversationId;
+        //     if (conversationId) {
+        //         connection.invoke("JoinChat", conversationId.toString())
+        //             .catch(err => console.error(err.toString()));
+        //     }
+        //     scrollToBottom(); 
+        // }).catch(function (err) {
+        //     console.error(err.toString());
+        // });
+
+        // if (chatInput) {
+        //     chatInput.addEventListener('input', function () {
+        //         this.style.height = 'auto';
+        //         this.style.height = (this.scrollHeight) + 'px';
+        //     });
+        // }
     </script>
 }

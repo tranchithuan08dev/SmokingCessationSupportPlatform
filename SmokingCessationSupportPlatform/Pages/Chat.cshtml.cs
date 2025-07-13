@@ -101,72 +101,72 @@ namespace SmokingCessationSupportPlatform.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            _logger.LogInformation("OnPostAsync: Form submitted.");
-            _logger.LogInformation($"OnPostAsync: MessageContent from form: '{MessageContent}'");
+        //public async Task<IActionResult> OnPostAsync()
+        //{
+        //    _logger.LogInformation("OnPostAsync: Form submitted.");
+        //    _logger.LogInformation($"OnPostAsync: MessageContent from form: '{MessageContent}'");
 
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userRoleClaim = User.FindFirst(ClaimTypes.Role);
+        //    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        //    var userRoleClaim = User.FindFirst(ClaimTypes.Role);
 
-            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int currentId))
-            {
-                _logger.LogWarning("OnPostAsync: User ID claim not found or invalid during POST. Redirecting to login.");
-                return RedirectToPage("/Account/Login");
-            }
+        //    if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int currentId))
+        //    {
+        //        _logger.LogWarning("OnPostAsync: User ID claim not found or invalid during POST. Redirecting to login.");
+        //        return RedirectToPage("/Account/Login");
+        //    }
 
-            CurrentUserId = currentId;
-            CurrentUserType = userRoleClaim?.Value ?? "User";
-            if (CurrentUserType.Equals("Member", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "User";
-            if (CurrentUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "Coach";
+        //    CurrentUserId = currentId;
+        //    CurrentUserType = userRoleClaim?.Value ?? "User";
+        //    if (CurrentUserType.Equals("Member", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "User";
+        //    if (CurrentUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase)) CurrentUserType = "Coach";
 
-            _logger.LogInformation($"OnPostAsync: ConversationId: {ConversationId}, PartnerId: {PartnerId}, PartnerType: {PartnerType}");
+        //    _logger.LogInformation($"OnPostAsync: ConversationId: {ConversationId}, PartnerId: {PartnerId}, PartnerType: {PartnerType}");
 
-            if (!ModelState.IsValid)
-            {
-                _logger.LogWarning("OnPostAsync: ModelState is NOT valid.");
-                foreach (var modelStateEntry in ModelState.Values)
-                {
-                    foreach (var error in modelStateEntry.Errors)
-                    {
-                        _logger.LogError($"OnPostAsync: Validation Error: {error.ErrorMessage}");
-                    }
-                }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        _logger.LogWarning("OnPostAsync: ModelState is NOT valid.");
+        //        foreach (var modelStateEntry in ModelState.Values)
+        //        {
+        //            foreach (var error in modelStateEntry.Errors)
+        //            {
+        //                _logger.LogError($"OnPostAsync: Validation Error: {error.ErrorMessage}");
+        //            }
+        //        }
 
-                return await OnGetAsync(PartnerId, PartnerType);
-            }
-            _logger.LogInformation("OnPostAsync: ModelState is valid.");
+        //        return await OnGetAsync(PartnerId, PartnerType);
+        //    }
+        //    _logger.LogInformation("OnPostAsync: ModelState is valid.");
 
-            try
-            {
-                var sentMessage = await _chatService.SendMessageAsync(
-                    ConversationId,
-                    CurrentUserId,
-                    CurrentUserType,
-                    PartnerId,
-                    PartnerType,
-                    MessageContent
-                );
+        //    try
+        //    {
+        //        var sentMessage = await _chatService.SendMessageAsync(
+        //            ConversationId,
+        //            CurrentUserId,
+        //            CurrentUserType,
+        //            PartnerId,
+        //            PartnerType,
+        //            MessageContent
+        //        );
 
-                if (sentMessage != null)
-                {
-                    MessageContent = string.Empty; 
-                    _logger.LogInformation($"OnPostAsync: Message sent successfully. MessageId: {sentMessage.MessageId}");
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "Không thể gửi tin nhắn. Dịch vụ trả về null.";
-                    _logger.LogError("OnPostAsync: SendMessageAsync returned null.");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "OnPostAsync: Lỗi khi gửi tin nhắn.");
-                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi gửi tin nhắn.";
-            }
-
-
-            return RedirectToPage("/Chat", new { partnerId = PartnerId, partnerType = PartnerType });
-        }
+        //        if (sentMessage != null)
+        //        {
+        //            MessageContent = string.Empty; 
+        //            _logger.LogInformation($"OnPostAsync: Message sent successfully. MessageId: {sentMessage.MessageId}");
+        //        }
+        //        else
+        //        {
+        //            TempData["ErrorMessage"] = "Không thể gửi tin nhắn. Dịch vụ trả về null.";
+        //            _logger.LogError("OnPostAsync: SendMessageAsync returned null.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "OnPostAsync: Lỗi khi gửi tin nhắn.");
+        //        TempData["ErrorMessage"] = "Đã xảy ra lỗi khi gửi tin nhắn.";
+        //    }
+        //    MessageContent = string.Empty;
+        //    Messages = await _chatService.GetConversationMessagesWithSenderInfoAsync(this.ConversationId);
+        //    return Page();
+        //}
     }
 }
