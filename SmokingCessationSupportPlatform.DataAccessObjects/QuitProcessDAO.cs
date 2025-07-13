@@ -1,4 +1,5 @@
-﻿using SmokingCessationSupportPlatform.BusinessObjects.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
 using System;
 using System.Collections.Generic;
@@ -46,5 +47,21 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects
             return listQuitProgresses;
         }
 
+
+        public static List<QuitProgress> GetListQuitProgressesAllUser() {
+            var listQuitProgresses = new List<QuitProgress>();
+            
+            try
+            {
+                using var context = new SmokingCessationSupportPlatformContext();
+                listQuitProgresses = context.QuitProgresses.Include(u => u.User).ToList();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listQuitProgresses;
+         
+        }
     }
 }
