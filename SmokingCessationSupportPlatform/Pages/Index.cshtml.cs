@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SmokingCessationSupportPlatform.BusinessObjects.Models;
+using SmokingCessationSupportPlatform.Services.Interfaces;
 using System.Security.Claims;
 
 namespace SmokingCessationSupportPlatform.Pages
@@ -7,14 +9,19 @@ namespace SmokingCessationSupportPlatform.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private readonly IBlogPostService _blogPostService;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        [BindProperty]
+        public List<BlogPost> ListBlogPosts { get; set; } = new List<BlogPost>();
+        public IndexModel(ILogger<IndexModel> logger, IBlogPostService blogPostService)
         {
             _logger = logger;
+            _blogPostService = blogPostService;
         }
 
         public IActionResult  OnGet()
         {
+            ListBlogPosts = _blogPostService.GetAllBlogPosts();
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userRoleClaim = User.FindFirst(ClaimTypes.Role);
 

@@ -1,56 +1,136 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang Chủ";
 }
+<!-- Hero Banner -->
+<section class="vh-100 d-flex align-items-center text-white" style="background: url('/image/Background.webp') center/cover no-repeat;">
+    <div class="container text-center bg-dark bg-opacity-50 p-5 rounded shadow">
+        <h1 class="display-4 fw-bold">Hành trình bỏ thuốc bắt đầu từ hôm nay</h1>
+        <p class="lead mt-3">Cùng nhau hướng tới một cuộc sống khỏe mạnh hơn.</p>
+        <a href="#start" class="btn btn-success btn-lg mt-4 px-4">Khám phá ngay</a>
+    </div>
+</section>
 
-<div class="container mt-5">
+<!-- Giới thiệu -->
+<section id="start" class="container mt-5">
     <div class="row align-items-center">
-        <div class="col-md-6">
-            <div id="smokingPosterCarousel" class="carousel slide rounded shadow" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="col-md-6 mb-4">
+            <div id="carouselPosters" class="carousel slide shadow rounded" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="~/image/Background.webp" class="d-block " alt="Stop Smoking Poster 1" />
+                        <img src="~/image/Poster2.webp" class="d-block w-100 rounded" alt="Poster 1">
                     </div>
                     <div class="carousel-item">
-                        <img src="~/image/Poster2.webp" class="d-block" alt="Stop Smoking Poster 2" />
-                    </div>
-                    <div class="carousel-item">
-                        <img src="~/image/Poster3.jpg" class="d-block" alt="Stop Smoking Poster 3" />
+                        <img src="~/image/Poster3.jpg" class="d-block w-100 rounded" alt="Poster 2">
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="col-md-6">
-            <div class="text-white bg-dark bg-opacity-75 p-4 rounded shadow custom-jumbotron">
-                <h1 class="display-4">Welcome to the Smoking Cessation Support Platform!</h1>
-                <p class="lead">Your journey to quit smoking starts here.</p>
-                <hr class="my-4 border-light" />
-                <p>We provide the tools and resources you need to achieve a healthier life.</p>
-                <a class="btn btn-primary btn-lg mt-3" href="#" role="button">Learn More</a>
+            <div class="bg-light p-4 rounded shadow">
+                <h2 class="text-success">Nền tảng hỗ trợ cai thuốc lá</h2>
+                <p class="lead">Chúng tôi cung cấp công cụ, kế hoạch, và cộng đồng giúp bạn chiến thắng cơn nghiện thuốc.</p>
+                <ul class="list-unstyled">
+                    <li>✅ Theo dõi tiến độ bỏ thuốc</li>
+                    <li>✅ Nhận tư vấn từ chuyên gia</li>
+                    <li>✅ Chia sẻ & động viên trong cộng đồng</li>
+                </ul>
+                <a class="btn btn-outline-success mt-3" href="#">Tìm hiểu thêm</a>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Community Support</h2>
-            <p>Connect with like-minded individuals, share experiences, and get encouragement from our community.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">Join Now &raquo;</a></p>
+<!-- 3 Lợi ích chính -->
+<section class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">💬 Hỗ trợ cộng đồng</h5>
+                    <p class="card-text">Tham gia nhóm người cùng chí hướng và nhận sự hỗ trợ tinh thần mỗi ngày.</p>
+                    <a href="#" class="btn btn-outline-primary">Tham gia</a>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4">
-            <h2>Learning Resources</h2>
-            <p>Access detailed articles, videos, and guides on effective smoking cessation methods.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">Explore &raquo;</a></p>
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">📚 Tài liệu học tập</h5>
+                    <p class="card-text">Truy cập bài viết, video và cẩm nang giúp bạn hiểu rõ cách cai thuốc hiệu quả.</p>
+                    <a href="#" class="btn btn-outline-warning">Xem thêm</a>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4">
-            <h2>Personalized Plan</h2>
-            <p>Build a tailored quit plan, track your progress, and get expert advice.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">Start Your Plan &raquo;</a></p>
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-success">📈 Kế hoạch cá nhân</h5>
+                    <p class="card-text">Tạo lộ trình phù hợp với bạn, theo dõi ngày không hút thuốc và thành tích.</p>
+                    <a href="#" class="btn btn-outline-success">Bắt đầu</a>
+                </div>
+            </div>
         </div>
     </div>
-    <hr>
-</div>
+</section>
+
+<!-- Bảng xếp hạng -->
+<section class="container mt-5">
+    <h2 class="text-center text-success mb-4">🏆 Bảng xếp hạng thành tích</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped shadow-sm">
+            <thead class="table-success text-center">
+                <tr>
+                    <th>Hạng</th>
+                    <th>Người dùng</th>
+                    <th>Ngày không hút thuốc</th>
+                    <th>Tiền tiết kiệm (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr>
+                    <td>1</td>
+                    <td>minhtrung</td>
+                    <td>60</td>
+                    <td>1.800.000</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>lananh</td>
+                    <td>42</td>
+                    <td>1.260.000</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>hungnguyen</td>
+                    <td>35</td>
+                    <td>1.050.000</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Blog -->
+<section class="container mt-5 mb-5">
+    <h2 class="text-center text-primary mb-4">📝 Blog chia sẻ kinh nghiệm</h2>
+    <div class="row">
+        @foreach (var post in Model.ListBlogPosts)
+        {
+                <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@post.Title</h5>
+                            <p class="text-muted">Loại bài viết: @post.Category • @post.PostDate</p>
+                        <p class="card-text">@post.Content
+                        </p>
+                        <a href="#" class="btn btn-sm btn-primary">Đọc tiếp</a>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        
+    </div>
+</section>

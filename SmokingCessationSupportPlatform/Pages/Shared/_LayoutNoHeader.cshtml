@@ -27,9 +27,9 @@
                 </a>
             </li>
             <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/Analytics" ? "active" : "")">
-                <a href="/Coach/Analytics">
+                <a href="/Coach/Plan">
                     <i class="bx bxs-doughnut-chart"></i>
-                    <span class="text">Analytics</span>
+                    <span class="text">Lên kế Hoạch</span>
                 </a>
             </li>
             <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/Message" ? "active" : "")">
@@ -38,10 +38,10 @@
                     <span class="text">Message</span>
                 </a>
             </li>
-            <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/Team" ? "active" : "")">
-                <a href="/Coach/Team">
+            <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/CreateBlog" ? "active" : "")">
+                <a href="/Coach/CreateBlog">
                     <i class="bx bxs-group"></i>
-                    <span class="text">Team</span>
+                    <span class="text">Tạo Blog</span>
                 </a>
             </li>
             <li>
@@ -66,7 +66,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-2 py-2">
+    <footer class="border-top footer text-muted mt-2 py-2  fixed-bottom">
         <div class="container text-center">
             &copy; @DateTime.Now.Year - SmokingCessationSupportPlatform - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>

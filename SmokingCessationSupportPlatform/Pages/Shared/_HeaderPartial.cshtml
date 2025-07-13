@@ -1,0 +1,38 @@
+﻿<header>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm py-3 beautiful-navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" asp-area="" asp-page="/Index">
+                <img src="~/image/logo.png" alt="Logo" style="height: 40px;" />
+                <span class="fw-bold fs-5 text-white brand-text">SmokingCessationPlatform</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" asp-area="" asp-page="/Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/About">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Contact">Contact</a>
+                    </li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-light" asp-area="" asp-page="/Account/Login">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                    </a>
+                    <a class="btn btn-light text-primary fw-semibold" asp-area="" asp-page="/Account/Register">
+                        <i class="bi bi-person-plus me-1"></i> Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

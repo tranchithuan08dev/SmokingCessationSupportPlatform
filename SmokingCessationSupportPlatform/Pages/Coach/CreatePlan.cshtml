@@ -1,0 +1,183 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Coach.CreatePlanModel
+@{
+    Layout = "_LayoutNoHeader";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/coach-dashboard.css" />
+     <link rel="stylesheet" href="~/css/message.css" />
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">📋 Danh sách kế hoạch cai thuốc</h2>
+
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addQuitPlanModal">
+        ➕ Tạo thêm giai đoạn cai thuốc lá
+    </button>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle text-center">
+            <thead class="table-success">
+                <tr>
+                    <th>#</th>
+                    <th>Tên kế hoạch</th>
+                    <th>Lý do bỏ thuốc</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày mục tiêu</th>
+                    <th>Giai đoạn</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.QuitPlans.Any())
+                {
+                    int index = 1;
+                    foreach (var plan in Model.QuitPlans)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td class="text-start">@plan.PlanName</td>
+                            <td class="text-start">@plan.ReasonToQuit</td>
+                            <td>@plan.StartDate</td>
+                            <td>@plan.TargetQuitDate</td>
+                            <td>@plan.CurrentStage</td>
+                            <td><span class="badge bg-success">Đang hoạt động</span></td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-muted">Chưa có kế hoạch nào</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal chọn kế hoạch cai thuốc -->
+<div class="modal fade" id="addQuitPlanModal" tabindex="-1" aria-labelledby="addQuitPlanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addQuitPlanModalLabel">📝 Danh sách kế hoạch cai thuốc</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle text-center">
+                        <thead class="table-success">
+                            <tr>
+                                <th>#</th>
+                                <th>Tên kế hoạch</th>
+                                <th>Lý do</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày mục tiêu</th>
+                                <th>Giai đoạn</th>
+                                <th>Trạng thái</th>
+                                <th>Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.AvailablePlans != null && Model.AvailablePlans.Any())
+                            {
+                                int index = 1;
+                                foreach (var plan in Model.AvailablePlans)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td class="text-start">@plan.PlanName</td>
+                                        <td class="text-start">@plan.ReasonToQuit</td>
+                                        <td>@plan.StartDate</td>
+                                        <td>@plan.TargetQuitDate</td>
+                                        <td>@plan.CurrentStage</td>
+                                        <td><span class="badge bg-success">Đang hoạt động</span></td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary openStageModal"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#stageModal"
+                                                    data-plan-id="@plan.PlanId">
+                                                Chọn
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">Không có kế hoạch nào khả dụng</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal nhập thông tin giai đoạn -->
+<!-- Modal nhập giai đoạn cho kế hoạch -->
+<div class="modal fade" id="stageModal" tabindex="-1" aria-labelledby="stageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="AssignStages">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stageModalLabel">📋 Nhập giai đoạn cho kế hoạch</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="stagePlanId" name="StageInput.PlanID" value="" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Tên giai đoạn</label>
+                        <input name="StageInput.StageName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea name="StageInput.Description" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ngày mục tiêu</label>
+                        <input name="StageInput.TargetDate" type="date" class="form-control" required />
+                    </div>
+
+                    <div class="form-check">
+                        <input name="StageInput.IsCompleted" type="checkbox" class="form-check-input" />
+                        <label class="form-check-label">Hoàn thành</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Lưu giai đoạn</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.openStageModal');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const planId = this.getAttribute('data-plan-id');
+                    document.getElementById('stagePlanId').value = planId;
+                });
+            });
+        });
+    </script>
+}
+

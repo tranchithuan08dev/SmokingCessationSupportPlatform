@@ -3,7 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using SmokingCessationSupportPlatform.DataAccessObjects;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
 using SmokingCessationSupportPlatform.Repositories;
+using SmokingCessationSupportPlatform.Repositories.Implementations;
+using SmokingCessationSupportPlatform.Repositories.Interfaces;
 using SmokingCessationSupportPlatform.Services;
+using SmokingCessationSupportPlatform.Services.Implementations;
+using SmokingCessationSupportPlatform.Services.Interfaces;
 
 namespace SmokingCessationSupportPlatform
 {
@@ -27,7 +31,8 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<CoachDAO>();
             builder.Services.AddScoped<ConversationDAO>();
             builder.Services.AddScoped<MessageDAO>();
-
+            builder.Services.AddScoped<QuitProcessRepository>();
+          
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICoachRepository, CoachRepository>();
@@ -38,6 +43,17 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IUserAuthentification, UserAuthentification>();
+            builder.Services.AddScoped<IQuitProcessRepository, QuitProcessRepository>();
+            builder.Services.AddScoped<IQuitProcessService, QuitProcessService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddScoped<IQuitPlanRepository, QuitPlanRepository>();
+            builder.Services.AddScoped<IQuitPlanService, QuitPlanService>();
+
+            builder.Services.AddScoped<IQuitPlanStagesRepository, QuitPlanStagesRepository>();
+            builder.Services.AddScoped<IQuitPlanStagesService, QuitPlanStagesService>();
+            builder.Services.AddScoped<IBlogPostRepository, BlogPostReposiory>();
+            builder.Services.AddScoped<IBlogPostService, BlogPostService>();
             builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

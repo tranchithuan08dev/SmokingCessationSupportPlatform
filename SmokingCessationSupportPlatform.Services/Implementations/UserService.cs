@@ -1,0 +1,22 @@
+﻿using SmokingCessationSupportPlatform.BusinessObjects.Models;
+using SmokingCessationSupportPlatform.Repositories;
+using SmokingCessationSupportPlatform.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SmokingCessationSupportPlatform.Services.Implementations
+{
+    public class UserService : IUserService
+    {
+        private readonly IUserRepository _userRepository;
+        public UserService(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+        public List<User> GetAllUser()
+        => _userRepository.GetAllUsers();
+    }
+}
