@@ -1,22 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmokingCessationSupportPlatform.DataAccessObjects
 {
-    public class UserDAO :  BaseDAO<User>
+    public class UserDAO : BaseDAO<User>
     {
         public UserDAO(SmokingCessationSupportPlatformContext context) : base(context) { }
 
         public async Task<User?> GetUserByIdWithCoachInfoAsync(int id)
         {
             return await _dbSet
-                .Include(u => u.Coach) 
+                .Include(u => u.Coach)
                 .FirstOrDefaultAsync(u => u.UserId == id);
         }
 

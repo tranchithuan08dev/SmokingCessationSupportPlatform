@@ -1,11 +1,6 @@
 ﻿using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.DataAccessObjects;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmokingCessationSupportPlatform.Repositories
 {

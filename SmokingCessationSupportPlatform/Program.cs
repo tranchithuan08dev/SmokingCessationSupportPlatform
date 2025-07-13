@@ -38,17 +38,18 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IUserAuthentification, UserAuthentification>();
+            builder.Services.AddScoped<UserService>();
             builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
-            options.LoginPath = "/Account/Login";
-            options.AccessDeniedPath = "/Account/AccessDenied";
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-            options.SlidingExpiration = true;
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
 
 

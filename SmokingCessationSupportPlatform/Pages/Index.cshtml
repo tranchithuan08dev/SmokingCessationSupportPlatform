@@ -2,6 +2,12 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home Page";
+    var Member = ViewData["Member"] as SmokingCessationSupportPlatform.BusinessObjects.Models.User;
+    var QuitProgressList = ViewData["QuitProgressList"] as List<SmokingCessationSupportPlatform.BusinessObjects.Models.QuitProgress>;
+    var AchievementList = ViewData["Achievements"] as List<SmokingCessationSupportPlatform.BusinessObjects.Models.Achievement>;
+    var Quote = ViewData["MotivationalQuote"] as string;
+    var totalDays = QuitProgressList?.Sum(p => p.DaysSmokingFree ?? 0) ?? 0;
+    var totalSaved = QuitProgressList?.Sum(p => p.MoneySaved ?? 0) ?? 0;
 }
 
 <div class="container mt-5">
@@ -54,3 +60,83 @@
     </div>
     <hr>
 </div>
+@if (TempData["ShowWelcomeModal"] != null && Member != null)
+{
+    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="welcomeModalLabel">Welcome back, @Member.Username! 🎉</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    @* --- Câu động viên --- *@
+                    @if (!string.IsNullOrEmpty(Quote))
+                    {
+                        <div class="alert alert-info">
+                            <strong>💬 Motivation:</strong> <em>@Quote</em>
+                        </div>
+                    }
+
+                    @* --- Tổng quan tiến trình --- *@
+                    <h5 class="mt-3">🚭 Your Quit Progress</h5>
+
+                    <p>
+                        <strong>Total Smoke-Free Days:</strong> @totalDays days<br />
+                        <strong>Total Money Saved:</strong> @totalSaved.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))
+                    </p>
+
+                    @if (QuitProgressList != null && QuitProgressList.Any())
+                    {
+                        <ul class="list-group mb-3">
+                            @foreach (var progress in QuitProgressList)
+                            {
+                                <li class="list-group-item">
+                                    <strong>Date:</strong> @(progress.ReportDate?.ToString("dd/MM/yyyy") ?? "N/A") |
+                                    <strong>Days:</strong> @progress.DaysSmokingFree |
+                                    <strong>Saved:</strong> @(progress.MoneySaved?.ToString("C0", new System.Globalization.CultureInfo("vi-VN")) ?? "0 ₫")
+                                </li>
+                            }
+                        </ul>
+                    }
+
+                    @* --- Danh sách thành tích --- *@
+                    @if (AchievementList != null && AchievementList.Any())
+                    {
+                        <h5 class="mt-3">🏆 Your Achievements</h5>
+                        <ul class="list-group">
+                            @foreach (var ua in AchievementList)
+                            {
+                                <li class="list-group-item d-flex align-items-center">
+                                    @* Icon bên trái *@
+                                    @if (!string.IsNullOrEmpty(ua.IconUrl))
+                                    {
+                                        <img src="@ua.IconUrl" alt="Icon" class="me-3" style="width: 40px; height: 40px;" />
+                                    }
+
+                                    <div>
+                                        <strong>@ua.AchievementName</strong><br />
+                                        <span class="small text-muted">@ua.Description</span>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href="/QuitProgress/Track">Track Your Progress</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+            welcomeModal.show();
+        };
+    </script>
+}

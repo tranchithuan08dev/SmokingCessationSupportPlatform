@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.Services;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
@@ -38,11 +37,11 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Account
 
         }
 
-        public async Task<IActionResult> OnPostAsync() 
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                return Page(); 
+                return Page();
             }
 
             try
@@ -87,12 +86,15 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Account
 
                     switch (user.UserRole)
                     {
+                        case "Member":
+                            TempData["ShowWelcomeModal"] = true;
+                            return RedirectToPage("/Index");
                         case "Admin":
                             return RedirectToPage("/Admin/Dashboard");
                         case "Coach":
-                            return RedirectToPage("/Coach/CoachDashboard"); 
+                            return RedirectToPage("/Coach/CoachDashboard");
                         default:
-                            return RedirectToPage("/Index"); 
+                            return RedirectToPage("/Index");
                     }
 
                     return RedirectToPage("/Index");
