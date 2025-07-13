@@ -1,0 +1,54 @@
+@model SmokingCessationSupportPlatform.Models.SmokingStatusInputViewModel
+@{
+    ViewData["Title"] = "Ghi Nhận Tình Trạng Hút Thuốc";
+}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Ghi Nhận Tình Trạng Hút Thuốc</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="CigarettesPerDay" class="form-label">Số điếu thuốc mỗi ngày</label>
+                            <input asp-for="CigarettesPerDay" class="form-control" />
+                            <span asp-validation-for="CigarettesPerDay" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Frequency" class="form-label">Tần suất hút thuốc</label>
+                            <select asp-for="Frequency" class="form-select">
+                                <option value="">-- Chọn tần suất --</option>
+                                <option>Hàng ngày</option>
+                                <option>Gần như hàng ngày</option>
+                                <option>Vài lần mỗi tuần</option>
+                                <option>Thỉnh thoảng</option>
+                                <option>Chỉ khi đi tiệc/giao lưu</option>
+                                <option>Đã bỏ hút</option>                                
+                            </select>
+                            <span asp-validation-for="Frequency" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="CigaretteCostPerPack" class="form-label">Giá tiền một bao thuốc (VNĐ)</label>
+                            <input asp-for="CigaretteCostPerPack" class="form-control" />
+                            <span asp-validation-for="CigaretteCostPerPack" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PacksPerWeek" class="form-label">Số bao mỗi tuần</label>
+                            <input asp-for="PacksPerWeek" class="form-control" />
+                            <span asp-validation-for="PacksPerWeek" class="text-danger"></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.Action("Index", "SmokingStatus")" class="btn btn-secondary">Quay lại</a>
+                            <button type="submit" class="btn btn-primary">Ghi Nhận</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

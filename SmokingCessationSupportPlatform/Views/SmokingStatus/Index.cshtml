@@ -1,0 +1,96 @@
+@model List<SmokingCessationSupportPlatform.Models.SmokingStatusDisplayViewModel>
+@{
+    ViewData["Title"] = "Tình Trạng Hút Thuốc";
+    var latest = ViewBag.Latest as SmokingCessationSupportPlatform.Models.SmokingStatusDisplayViewModel;
+    SmokingCessationSupportPlatform.Models.SmokingStatusDisplayViewModel prev = null;
+    if (Model.Count > 1) { prev = Model[1]; }
+    int? diff = (latest?.CigarettesPerDay ?? 0) - (prev?.CigarettesPerDay ?? 0);
+    decimal weeklyCost = (latest?.CigaretteCostPerPack ?? 0m) * (latest?.PacksPerWeek ?? 0m);
+}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">Tình Trạng Hút Thuốc Hiện Tại</h2>
+            @if (latest != null)
+            {
+                <div class="card border-primary mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Ngày ghi nhận:</strong> @latest.ReportDate?.ToString("dd/MM/yyyy")</p>
+                                <p><strong>Số điếu/ngày:</strong> @latest.CigarettesPerDay</p>
+                                <p><strong>Tần suất:</strong> @latest.Frequency</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Giá 1 bao (VNĐ):</strong> @latest.CigaretteCostPerPack?.ToString("N0")</p>
+                                <p><strong>Số bao/tuần:</strong> @latest.PacksPerWeek</p>
+                                <p><strong>Tổng tiền/tuần (ước tính):</strong> <span class="text-primary">@weeklyCost.ToString("N0") VNĐ</span></p>
+                                @if (prev != null)
+                                {
+                                    <p><strong>So với lần trước:</strong>
+                                        @if (diff < 0)
+                                        {
+                                            <span class="text-success">Giảm @Math.Abs(diff ?? 0) điếu/ngày</span>
+                                        }
+                                        else if (diff > 0)
+                                        {
+                                            <span class="text-danger">Tăng @diff điếu/ngày</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-secondary">Không thay đổi</span>
+                                        }
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                        @if (prev != null)
+                        {
+                            if (diff < 0)
+                            {
+                                <div class="alert alert-success mt-2"><i class="bi bi-emoji-smile"></i> Tuyệt vời! Bạn đã giảm số điếu hút mỗi ngày!</div>
+                            }
+                            else if (diff > 0)
+                            {
+                                <div class="alert alert-warning mt-2"><i class="bi bi-emoji-frown"></i> Hãy cố gắng giảm số điếu hút nhé!</div>
+                            }
+                        }
+                        <a href="@Url.Action("Create", "SmokingStatus")" class="btn btn-primary mt-2">Cập nhật tình trạng mới</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">Bạn chưa ghi nhận tình trạng hút thuốc. <a href="@Url.Action("Create", "SmokingStatus")">Ghi nhận ngay</a></div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h4>Lịch Sử Ghi Nhận</h4>
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Ngày ghi nhận</th>
+                        <th>Số điếu/ngày</th>
+                        <th>Tần suất</th>
+                        <th>Giá 1 bao (VNĐ)</th>
+                        <th>Số bao/tuần</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ReportDate?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.CigarettesPerDay</td>
+                        <td>@item.Frequency</td>
+                        <td>@item.CigaretteCostPerPack?.ToString("N0")</td>
+                        <td>@item.PacksPerWeek</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 
