@@ -27,5 +27,8 @@ namespace SmokingCessationSupportPlatform.Services.Implementations
         public List<QuitProgress> GetListQuitProgresses(int userId)
         => _quitProcess.GetListQuitProgresses(userId);
 
+        public List<QuitProgress> GetListQuitProgressesAllUser()
+        => _quitProcess.GetListQuitProgressesAllUser();
+
     }
 }

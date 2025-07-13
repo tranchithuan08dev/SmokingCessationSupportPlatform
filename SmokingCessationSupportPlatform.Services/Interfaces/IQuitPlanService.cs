@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace SmokingCessationSupportPlatform.Services.Interfaces
 {
-    public interface IQuitProcessService
+    public interface IQuitPlanService
     {
-        void CreateQuitProcess(QuitProgress quitProcess);
+        List<QuitPlan> GetAllQuitPlans();
 
-        List<QuitProgress> GetListQuitProgresses(int userId);
-
-        List<QuitProgress> GetListQuitProgressesAllUser();
+        List<QuitPlan> GetQuitPlanOfUser(int userId);
     }
 }
