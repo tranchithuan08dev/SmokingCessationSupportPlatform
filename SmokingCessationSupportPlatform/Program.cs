@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using SmokingCessationSupportPlatform.Data;
 using SmokingCessationSupportPlatform.DataAccessObjects;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
 using SmokingCessationSupportPlatform.Repositories;
@@ -14,6 +15,7 @@ namespace SmokingCessationSupportPlatform
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages(
                 options =>
                 {
@@ -25,6 +27,8 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<AccountDAO>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<IMembershipService, MembershipService>();
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -40,7 +44,7 @@ namespace SmokingCessationSupportPlatform
 
 
             builder.Services.AddDbContext<SmokingCessationSupportPlatformContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyStoreContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -58,7 +62,18 @@ namespace SmokingCessationSupportPlatform
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            // Seed data - ensure database is created and seeded
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<SmokingCessationSupportPlatformContext>();
+                context.Database.EnsureCreated();
+                SeedData.Initialize(scope.ServiceProvider);
+            }
 
             app.Run();
         }

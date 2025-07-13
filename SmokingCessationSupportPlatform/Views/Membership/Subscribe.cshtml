@@ -1,0 +1,130 @@
+@model SmokingCessationSupportPlatform.Models.PaymentViewModel
+
+@{
+    ViewData["Title"] = "Thanh Toán";
+    var plan = ViewBag.Plan as SmokingCessationSupportPlatform.BusinessObjects.Models.MembershipPlan;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-credit-card"></i> Thanh Toán Đăng Ký Thành Viên</h4>
+                </div>
+                <div class="card-body">
+                    @if (plan != null)
+                    {
+                        <div class="alert alert-info mb-4">
+                            <h5>Thông Tin Gói: @plan.PlanName</h5>
+                            <p class="mb-1"><strong>Giá:</strong> @plan.Price.ToString("N0") VNĐ</p>
+                            <p class="mb-1"><strong>Thời hạn:</strong> @(plan.DurationDays ?? 30) ngày</p>
+                            <p class="mb-0"><strong>Mô tả:</strong> @(plan.Description ?? "Không có mô tả")</p>
+                        </div>
+                    }
+
+                    <form asp-action="Subscribe" method="post">
+                        <input type="hidden" asp-for="PlanId" />
+                        <input type="hidden" asp-for="Amount" />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="PaymentMethod" class="form-label">Phương Thức Thanh Toán</label>
+                                    <select asp-for="PaymentMethod" class="form-select">
+                                        <option value="">Chọn phương thức thanh toán</option>
+                                        <option value="CreditCard">Thẻ tín dụng</option>
+                                        <option value="DebitCard">Thẻ ghi nợ</option>
+                                        <option value="BankTransfer">Chuyển khoản ngân hàng</option>
+                                    </select>
+                                    <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="CardNumber" class="form-label">Số Thẻ</label>
+                                    <input asp-for="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" />
+                                    <span asp-validation-for="CardNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="CardholderName" class="form-label">Tên Chủ Thẻ</label>
+                                    <input asp-for="CardholderName" class="form-control" placeholder="NGUYEN VAN A" />
+                                    <span asp-validation-for="CardholderName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label asp-for="ExpiryDate" class="form-label">Ngày Hết Hạn</label>
+                                    <input asp-for="ExpiryDate" class="form-control" placeholder="MM/YY" />
+                                    <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label asp-for="CVV" class="form-label">CVV</label>
+                                    <input asp-for="CVV" class="form-control" placeholder="123" />
+                                    <span asp-validation-for="CVV" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Tổng Tiền</label>
+                                    <div class="form-control-plaintext">
+                                        <strong class="text-primary">@Model.Amount.ToString("N0") VNĐ</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <small>
+                                <i class="fas fa-shield-alt"></i>
+                                Thông tin thanh toán của bạn được bảo mật và mã hóa. 
+                                Chúng tôi không lưu trữ thông tin thẻ của bạn.
+                            </small>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.Action("Index", "Membership")" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Quay Lại
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-lock"></i> Thanh Toán An Toàn
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Format card number with spaces
+        document.getElementById('CardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
+
+        // Format expiry date
+        document.getElementById('ExpiryDate').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+    </script>
+} 

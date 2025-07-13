@@ -1,0 +1,131 @@
+@{
+    ViewData["Title"] = "Nền Tảng Hỗ Trợ Cai Thuốc Lá";
+}
+
+<div class="hero-section text-center py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold text-primary mb-4">Nền Tảng Hỗ Trợ Cai Thuốc Lá</h1>
+        <p class="lead mb-4">Đồng hành cùng bạn trong hành trình cai thuốc lá với các phương pháp khoa học và hỗ trợ chuyên nghiệp</p>
+        
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="d-flex justify-content-center gap-3">
+                <a href="@Url.Action("Index", "Membership")" class="btn btn-primary btn-lg">
+                    <i class="bi bi-star me-2"></i>Đăng Ký Thành Viên
+                </a>
+                <a href="@Url.Action("Status", "Membership")" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-person-check me-2"></i>Xem Trạng Thái
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/Account/Register" class="btn btn-primary btn-lg">
+                    <i class="bi bi-person-plus me-2"></i>Đăng Ký Ngay
+                </a>
+                <a href="/Account/Login" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Đăng Nhập
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="features-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Tính Năng Nổi Bật</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-graph-up text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Theo Dõi Tiến Trình</h5>
+                        <p class="card-text">Theo dõi chi tiết quá trình cai thuốc với biểu đồ và thống kê trực quan</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Tư Vấn Chuyên Gia</h5>
+                        <p class="card-text">Được tư vấn trực tiếp từ các chuyên gia y tế có kinh nghiệm</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-bell text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Nhắc Nhở Thông Minh</h5>
+                        <p class="card-text">Hệ thống nhắc nhở thông minh giúp bạn duy trì động lực</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="membership-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="mb-4">Trở Thành Thành Viên</h2>
+                <p class="lead mb-4">Đăng ký thành viên để sử dụng đầy đủ tính năng và nhận hỗ trợ tốt nhất</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Truy cập không giới hạn</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Tư vấn chuyên gia 1-1</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Hỗ trợ 24/7</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Cộng đồng hỗ trợ</li>
+                </ul>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a href="@Url.Action("Index", "Membership")" class="btn btn-primary btn-lg">
+                        <i class="bi bi-star me-2"></i>Xem Các Gói
+                    </a>
+                }
+                else
+                {
+                    <a href="/Account/Register" class="btn btn-primary btn-lg">
+                        <i class="bi bi-person-plus me-2"></i>Đăng Ký Ngay
+                    </a>
+                }
+            </div>
+            <div class="col-md-6">
+                <img src="~/image/Background.webp" alt="Membership" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin-top: -1.5rem;
+    padding-top: 3rem;
+}
+
+.hero-section h1 {
+    color: white !important;
+}
+
+.hero-section .btn-outline-primary {
+    color: white;
+    border-color: white;
+}
+
+.hero-section .btn-outline-primary:hover {
+    background-color: white;
+    color: #667eea;
+}
+
+.features-section .card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.features-section .card:hover {
+    transform: translateY(-5px);
+}
+</style> 
