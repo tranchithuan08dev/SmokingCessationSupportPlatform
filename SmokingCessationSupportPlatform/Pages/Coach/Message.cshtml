@@ -22,8 +22,7 @@
                             Cuộc trò chuyện với: **Member ID @conversation.UserId**
                         </span>
                         <span class="last-message-date">
-                            @conversation.LastMessageAt.HasValue ?
-                            conversation.LastMessageAt.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa có tin nhắn"
+                            Tin nhắn cuối cùng vào lúc : @conversation.LastMessageAt.Value.ToString("dd/MM/yyyy HH:mm") 
                         </span>
                     </div>
                     <div class="conversation-preview">
