@@ -20,5 +20,10 @@ namespace SmokingCessationSupportPlatform.Repositories.Implementations
 
         public List<QuitProgress> GetListQuitProgresses(int userId)
        => QuitProcessDAO.GetQuitProgresses(userId);
+
+
+        // Lấy hết quá trình cai thuốc của bệnh nhân qua đó lên kế hoạch
+        public List<QuitProgress> GetListQuitProgressesAllUser()
+        => QuitProcessDAO.GetListQuitProgressesAllUser();
     }
 }
