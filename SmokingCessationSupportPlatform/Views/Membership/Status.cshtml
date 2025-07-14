@@ -1,0 +1,129 @@
+@model SmokingCessationSupportPlatform.Models.MembershipStatusViewModel
+
+@{
+    ViewData["Title"] = "Trạng Thái Thành Viên";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-user-check"></i> Trạng Thái Thành Viên</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.IsActiveMember)
+                    {
+                        <div class="alert alert-success">
+                            <h5><i class="fas fa-check-circle"></i> Bạn đang là thành viên tích cực!</h5>
+                            <p class="mb-0">Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-success">Thông Tin Gói</h6>
+                                        <p class="mb-1"><strong>Gói:</strong> @Model.PlanName</p>
+                                        <p class="mb-1"><strong>Ngày bắt đầu:</strong> @Model.StartDate?.ToString("dd/MM/yyyy")</p>
+                                        <p class="mb-1"><strong>Ngày kết thúc:</strong> @Model.EndDate?.ToString("dd/MM/yyyy")</p>
+                                        <p class="mb-0"><strong>Trạng thái thanh toán:</strong> 
+                                            <span class="badge bg-success">@Model.PaymentStatus</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-info">Thời Gian Còn Lại</h6>
+                                        <div class="text-center">
+                                            <h3 class="text-info">@Model.DaysRemaining</h3>
+                                            <p class="mb-0">ngày</p>
+                                        </div>
+                                        @if (Model.DaysRemaining <= 7)
+                                        {
+                                            <div class="alert alert-warning mt-2">
+                                                <small><i class="fas fa-exclamation-triangle"></i> Gói của bạn sắp hết hạn!</small>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between">
+                                <a href="@Url.Action("Index", "Membership")" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Gia Hạn Thành Viên
+                                </a>
+                                <form asp-action="Cancel" method="post" style="display: inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger" 
+                                            onclick="return confirm('Bạn có chắc chắn muốn hủy thành viên?')">
+                                        <i class="fas fa-times"></i> Hủy Thành Viên
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Bạn chưa là thành viên</h5>
+                            <p class="mb-0">Đăng ký thành viên để sử dụng đầy đủ tính năng của hệ thống.</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.PlanName))
+                        {
+                            <div class="card border-warning mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title text-warning">Thông Tin Gói Trước Đây</h6>
+                                    <p class="mb-1"><strong>Gói:</strong> @Model.PlanName</p>
+                                    <p class="mb-1"><strong>Ngày bắt đầu:</strong> @Model.StartDate?.ToString("dd/MM/yyyy")</p>
+                                    <p class="mb-1"><strong>Ngày kết thúc:</strong> @Model.EndDate?.ToString("dd/MM/yyyy")</p>
+                                    <p class="mb-0"><strong>Trạng thái:</strong> 
+                                        <span class="badge bg-warning">Đã hết hạn</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="text-center">
+                            <a href="@Url.Action("Index", "Membership")" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus"></i> Đăng Ký Thành Viên Ngay
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (Model.IsActiveMember)
+            {
+                <div class="card mt-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-gift"></i> Quyền Lợi Thành Viên</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><i class="fas fa-check text-success"></i> Truy cập đầy đủ tính năng hỗ trợ cai thuốc lá</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success"></i> Được tư vấn trực tiếp từ các chuyên gia</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success"></i> Theo dõi tiến trình cai thuốc chi tiết</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><i class="fas fa-check text-success"></i> Nhận thông báo và lời khuyên cá nhân hóa</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success"></i> Tham gia cộng đồng hỗ trợ</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success"></i> Ưu tiên hỗ trợ khách hàng</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div> 
