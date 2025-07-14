@@ -1,0 +1,158 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Coach.ListQuitProgressOfUserModel
+@{
+    Layout = "_LayoutNoHeader";
+}
+
+
+@section Head {
+    <link rel="stylesheet" href="~/css/coach-dashboard.css" />
+   
+}
+@{
+    ViewData["Title"] = "Quit Progress List";
+    int daysWithoutSmoking = 30;
+    int goalDays = 100;
+    int progressPercent = (int)(((double)daysWithoutSmoking / goalDays) * 100);
+}
+
+<h1 class="text-center my-4">Dashboard Quản lý Hút thuốc</h1>
+
+<!-- Tổng quan -->
+<div class="overview container mb-4">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-primary">
+                <div class="card-body">
+                    <span style="font-size: 2rem;">🚬</span>
+                    <h5 class="card-title mt-2">Số điếu thuốc đã bỏ hút</h5>
+                    <p class="card-text fs-4">@Model.TotalCigarettesSmoked</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-success">
+                <div class="card-body">
+                    <span style="font-size: 2rem;">💰</span>
+                    <h5 class="card-title mt-2">Số tiền tiết kiệm được</h5>
+                    <p class="card-text fs-4">@Model.TotalMoneySaved.ToString("N0") VNĐ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-warning">
+                <div class="card-body">
+                    <span style="font-size: 2rem;">🗓️</span>
+                    <h5 class="card-title mt-2">Số ngày không hút thuốc</h5>
+                    <p class="card-text fs-4">@Model.TotalDaysSmokingFree</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tiến trình -->
+<div class="container mb-4">
+    <label for="progressBar" class="form-label">Tiến trình cai thuốc</label>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: @progressPercent%;" 
+             aria-valuenow="@progressPercent" aria-valuemin="0" aria-valuemax="100">
+            @progressPercent%
+        </div>
+    </div>
+</div>
+
+<!-- Thông điệp động viên -->
+<div class="alert alert-success text-center mt-4" role="alert">
+    🌟 <strong>Chúc mừng!</strong> Mỗi ngày bạn không hút thuốc là một bước tiến tới một cuộc sống khỏe mạnh hơn! 💪
+</div>
+
+<!-- Thành tựu -->
+<div class="container mt-4 mb-5">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card border-success shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🎉 Mốc 1 ngày</h5>
+                    <p class="card-text">Bạn đã vượt qua 24 giờ đầu tiên - một cột mốc quan trọng!</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-primary shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🔥 Mốc 1 tuần</h5>
+                    <p class="card-text">Các cơ quan trong cơ thể bạn đang bắt đầu phục hồi!</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-warning shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">💖 Mốc 1 tháng</h5>
+                    <p class="card-text">Nguy cơ bệnh tim mạch bắt đầu giảm rõ rệt!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng thống kê -->
+<div class="container my-4">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Số thứ tự</th>
+                    <th scope="col">Ngày báo cáo</th>
+                    <th scope="col">Số lượng hút thuốc</th>
+                    <th scope="col">Trạng thái sức khỏe</th>
+                    <th scope="col">Tiền đã tiết kiệm</th>
+                    <th scope="col">Số ngày đã bỏ hút</th>
+                    <th scope="col">Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                    @if (Model.QuitProgressList?.Count > 0)
+                {
+                    int index = 1;
+                    foreach (var progress in Model.QuitProgressList)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@progress.ReportDate?.ToString("yyyy-MM-dd")</td>
+                            <td>@progress.CigarettesSmoked</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(progress.HealthStatus))
+                                {
+                                    <span class="badge bg-success">@progress.HealthStatus</span>
+                                }
+                            </td>
+                            <td>@progress.MoneySaved?.ToString("N2") VNĐ</td>
+                            <td>@progress.DaysSmokingFree</td>
+                            <td>@progress.Notes</td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">Không có dữ liệu báo cáo</td>
+                    </tr>
+                }
+              
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Trích dẫn truyền cảm hứng -->
+<div class="text-center mt-5 mb-5">
+    <blockquote class="blockquote">
+        <p class="mb-0">"Từ bỏ hút thuốc là món quà tốt nhất bạn có thể dành tặng cho chính mình."</p>
+        <p class="blockquote-footer" style="
+    margin-top: 10px;">Một người từng cai thuốc thành công</p>
+    </blockquote>
+</div>
+

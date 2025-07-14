@@ -57,5 +57,8 @@ namespace SmokingCessationSupportPlatform.Repositories
             _userDAO.Delete(user);
             await _context.SaveChangesAsync();
         }
+
+        public List<User> GetAllUsers()
+        => UserDAO.GetAllUserMember();
     }
 }
