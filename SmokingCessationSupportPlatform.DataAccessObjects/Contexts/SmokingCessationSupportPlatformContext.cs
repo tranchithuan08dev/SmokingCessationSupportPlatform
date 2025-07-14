@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SmokingCessationSupportPlatform.BusinessObjects.Models;
 
 namespace SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
@@ -49,18 +50,18 @@ public partial class SmokingCessationSupportPlatformContext : DbContext
     public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
 
-    //KHANH
-    //string GetConnectionString()
-    //{
-    //    IConfiguration config = new ConfigurationBuilder()
-    //    .SetBasePath(Directory.GetCurrentDirectory())
-    //    .AddJsonFile("appsettings.json").Build();
-    //    return config["ConnectionStrings:DefaultConnection"];
-    //}
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    optionsBuilder.UseSqlServer(GetConnectionString());
-    //}
+ 
+    string GetConnectionString()
+    {
+        IConfiguration config = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json").Build();
+        return config["ConnectionStrings:DefaultConnection"];
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer(GetConnectionString());
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
