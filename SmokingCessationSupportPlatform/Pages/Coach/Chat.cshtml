@@ -1,0 +1,176 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Coach.ChatModel
+@{
+    Layout = "_LayoutNoHeader";
+}
+@section Head {
+    <link rel="stylesheet" href="~/css/coach-dashboard.css" />
+    <link rel="stylesheet" href="~/css/chat-coach.css" /> 
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+}
+<div class="main-content">
+    <h1>Trò chuyện với Member @(Model.Conversation?.UserId != null ? $"(ID: {Model.Conversation.UserId})" : "")</h1>
+
+    @if (Model.Conversation != null)
+    {
+        <div class="chat-container">
+            <div class="message-list" id="messageList">
+                @if (Model.Conversation.Messages != null && Model.Conversation.Messages.Any())
+                {
+                    @foreach (var message in Model.Conversation.Messages.OrderBy(m => m.SentAt))
+                    {
+                        <div class="message-item @(message.FromType == "Coach" ? "coach-message" : "member-message")">
+                            <div class="message-header">
+                                <span class="message-sender">
+                                    @(message.FromType == "Coach" ? "Bạn" : "Member")
+                                </span>
+                                <span class="message-time">@message.SentAt.ToString("HH:mm dd/MM")</span>
+                            </div>
+                            <p class="message-content">@message.Content</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="no-messages">Chưa có tin nhắn nào trong cuộc trò chuyện này. Hãy gửi tin nhắn đầu tiên!</p>
+                }
+            </div>
+
+            <form method="post" class="chat-input-form" id="chatForm">
+                <input type="hidden" asp-for="Conversation.ConversationId" />
+                <textarea asp-for="NewMessageContent" id="newMessageContent" placeholder="Nhập tin nhắn của bạn..." required rows="3"></textarea>
+                <span asp-validation-for="NewMessageContent" class="text-danger" ></span>
+                <button type="submit">Gửi</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <p>Không tìm thấy cuộc trò chuyện này.</p>
+    }
+</div>
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const currentConversationId = @(Model.Conversation?.ConversationId ?? 0);
+        const currentCoachId = @(Model.CoachId);
+        const memberUserId = @(Model.Conversation?.UserId ?? 0); 
+
+        const messageList = document.getElementById('messageList');
+        const chatForm = document.getElementById('chatForm');
+        const newMessageContentInput = document.getElementById('newMessageContent');
+
+        function scrollToBottom() {
+            if (messageList) { 
+                messageList.scrollTop = messageList.scrollHeight;
+            }
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub") 
+            .withAutomaticReconnect() 
+            .build();
+
+        connection.on("ReceiveMessage", function (message) {
+            console.log("Received message:", message);
+
+            if (message.conversationId === currentConversationId) {
+                const isMyMessage = message.fromType === "Coach"; 
+                const noMessagesParagraph = messageList.querySelector('.no-messages');
+
+                if (noMessagesParagraph) {
+                    noMessagesParagraph.remove();
+                }
+
+                const messageItem = document.createElement('div');
+                messageItem.classList.add('message-item');
+                messageItem.classList.add(isMyMessage ? "coach-message" : "member-message"); 
+
+                const messageHeader = document.createElement('div');
+                messageHeader.classList.add('message-header');
+
+                const messageSender = document.createElement('span');
+                messageSender.classList.add('message-sender');
+                messageSender.textContent = isMyMessage ? "Bạn" : "Member"; 
+
+                const messageTime = document.createElement('span');
+                messageTime.classList.add('message-time');
+                const sentAt = new Date(message.sentAt);
+                messageTime.textContent = sentAt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + sentAt.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+
+                messageHeader.appendChild(messageSender);
+                messageHeader.appendChild(messageTime);
+
+                const messageContentP = document.createElement('p');
+                messageContentP.classList.add('message-content');
+                messageContentP.textContent = message.content;
+
+                messageItem.appendChild(messageHeader);
+                messageItem.appendChild(messageContentP);
+
+                messageList.appendChild(messageItem);
+
+                scrollToBottom();
+            }
+        });
+
+        connection.start()
+            .then(function () {
+                console.log("SignalR Connected.");
+                if (currentConversationId !== 0) {
+                    connection.invoke("JoinChat", currentConversationId.toString())
+                        .then(() => console.log(`Joined conversation group: ${currentConversationId}`))
+                        .catch(err => console.error(err.toString()));
+                }
+                scrollToBottom();
+            })
+            .catch(function (err) {
+                console.error("SignalR Connection Error:", err.toString());
+            });
+
+        if (chatForm && newMessageContentInput) {
+            chatForm.addEventListener('submit', async function (event) {
+                event.preventDefault(); 
+
+                const messageContent = newMessageContentInput.value.trim();
+
+                if (messageContent) {
+                    try {
+                        await connection.invoke("SendMessageToUser",
+                            currentConversationId,
+                            "Coach",
+                            messageContent,
+                            currentCoachId,
+                            "User", 
+                            memberUserId
+                        );
+
+                        newMessageContentInput.value = "";
+                        newMessageContentInput.style.height = 'auto';
+                        console.log("Message sent via SignalR.");
+
+                        const validationSpan = document.querySelector('span[data-valmsg-for="NewMessageContent"]');
+                        if (validationSpan) {
+                            validationSpan.textContent = "";
+                        }
+
+                    } catch (err) {
+                        console.error("Error sending message via SignalR:", err.toString());
+                    }
+                } else {
+                    const validationSpan = document.querySelector('span[data-valmsg-for="NewMessageContent"]');
+                    if (validationSpan) {
+                        validationSpan.textContent = "Tin nhắn không được để trống.";
+                    }
+                }
+            });
+        }
+
+        if (newMessageContentInput) {
+            newMessageContentInput.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    </script>
+}

@@ -205,6 +205,36 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects.Migrations
                     b.ToTable("CoachingSessions");
                 });
 
+            modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Conversation", b =>
+                {
+                    b.Property<int>("ConversationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ConversationID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"));
+
+                    b.Property<int>("CoachId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ConversationId");
+
+                    b.HasIndex("CoachId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Conversation");
+                });
+
             modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Feedback", b =>
                 {
                     b.Property<int>("FeedbackId")
@@ -285,6 +315,51 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("MembershipPlans");
+                });
+
+            modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Message", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FromId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FromType")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ToId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ToType")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Notification", b =>
@@ -762,6 +837,25 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Conversation", b =>
+                {
+                    b.HasOne("SmokingCessationSupportPlatform.BusinessObjects.Models.Coach", "Coach")
+                        .WithMany("Conversations")
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmokingCessationSupportPlatform.BusinessObjects.Models.User", "User")
+                        .WithMany("Conversations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Coach");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Feedback", b =>
                 {
                     b.HasOne("SmokingCessationSupportPlatform.BusinessObjects.Models.User", "User")
@@ -770,6 +864,17 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects.Migrations
                         .HasConstraintName("FK__Feedback__UserID__6754599E");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Message", b =>
+                {
+                    b.HasOne("SmokingCessationSupportPlatform.BusinessObjects.Models.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
                 });
 
             modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Notification", b =>
@@ -899,6 +1004,13 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects.Migrations
             modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Coach", b =>
                 {
                     b.Navigation("CoachingSessions");
+
+                    b.Navigation("Conversations");
+                });
+
+            modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.Conversation", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("SmokingCessationSupportPlatform.BusinessObjects.Models.MembershipPlan", b =>
@@ -920,6 +1032,8 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects.Migrations
                     b.Navigation("Coach");
 
                     b.Navigation("CoachingSessions");
+
+                    b.Navigation("Conversations");
 
                     b.Navigation("Feedbacks");
 

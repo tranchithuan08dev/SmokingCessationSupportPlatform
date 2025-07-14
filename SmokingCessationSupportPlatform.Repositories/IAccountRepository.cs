@@ -18,5 +18,6 @@ namespace SmokingCessationSupportPlatform.Repositories
         Task<PasswordResetToken?> GetValidPasswordResetTokenAsync(string email, string token);
         Task InvalidatePasswordResetTokenAsync(PasswordResetToken token); 
         Task UpdateUserPasswordAsync(User user, string newPasswordHash);
+        User? GetUserById(int id);
     }
 }

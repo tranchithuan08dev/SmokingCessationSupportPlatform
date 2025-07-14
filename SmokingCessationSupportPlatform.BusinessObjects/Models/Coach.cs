@@ -16,4 +16,6 @@ public partial class Coach
     public virtual User CoachNavigation { get; set; } = null!;
 
     public virtual ICollection<CoachingSession> CoachingSessions { get; set; } = new List<CoachingSession>();
+    public virtual ICollection<Conversation> Conversations { get; set; } = new List<Conversation>();
+
 }

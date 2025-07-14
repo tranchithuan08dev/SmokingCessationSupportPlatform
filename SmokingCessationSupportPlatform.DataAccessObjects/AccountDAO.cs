@@ -29,6 +29,11 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects
             return _dbContext.Users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
         }
 
+        public User? GetUserById(int id)
+        {
+            return _dbContext.Users.FirstOrDefault(u => u.UserId == id);
+        }
+
         public async Task<User?> AddUserAsync(User newUser)
         {
             if (newUser == null)

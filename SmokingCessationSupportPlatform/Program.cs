@@ -23,18 +23,33 @@ namespace SmokingCessationSupportPlatform
                     options.Conventions.AllowAnonymousToPage("/Account/ResetPassword");
                 });
             builder.Services.AddScoped<AccountDAO>();
+            builder.Services.AddScoped<UserDAO>();
+            builder.Services.AddScoped<CoachDAO>();
+            builder.Services.AddScoped<ConversationDAO>();
+            builder.Services.AddScoped<MessageDAO>();
+
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ICoachRepository, CoachRepository>();
+            builder.Services.AddScoped<IConservationRepository, ConversationRepository>();
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddTransient<IEmailService, EmailService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IUserAuthentification, UserAuthentification>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddSignalR();
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
-            options.LoginPath = "/Account/Login";
-            options.AccessDeniedPath = "/Account/AccessDenied";
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-            options.SlidingExpiration = true;
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
 
 
@@ -59,6 +74,7 @@ namespace SmokingCessationSupportPlatform
             app.UseAuthorization();
 
             app.MapRazorPages();
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }

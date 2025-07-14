@@ -1,0 +1,87 @@
+﻿/* Styling for the main content area */
+.main-content {
+    /* Đảm bảo margin-left phù hợp với chiều rộng sidebar của bạn */
+    margin-left: 250px; /* Ví dụ, điều chỉnh dựa trên chiều rộng sidebar của bạn */
+    padding: 20px;
+    background-color: #f9f9f9; /* Nền nhẹ cho khu vực nội dung */
+    min-height: calc(100vh - 40px); /* Đảm bảo nội dung chiếm hết chiều cao màn hình */
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.conversation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Khoảng cách giữa các mục cuộc trò chuyện */
+}
+
+.conversation-item {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer; /* Cho biết có thể nhấp vào */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .conversation-item:hover {
+        transform: translateY(-3px); /* Hiệu ứng nâng nhẹ khi di chuột qua */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+.conversation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.partner-name { /* Đổi tên thành partner-name cho tổng quát */
+    font-weight: 700;
+    color: #3498db; /* Màu xanh cho tên đối tác */
+    font-size: 18px;
+}
+
+.last-message-date {
+    font-size: 13px;
+    color: #888;
+}
+
+.conversation-preview {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    /* Giới hạn số dòng cho xem trước */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Hiển thị tối đa 2 dòng */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.view-chat-button {
+    display: inline-block;
+    background-color: #28a745; /* Nút màu xanh lá */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    align-self: flex-end; /* Căn chỉnh nút sang phải */
+}
+
+    .view-chat-button:hover {
+        background-color: #218838; /* Màu xanh lá đậm hơn khi di chuột qua */
+    }

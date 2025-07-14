@@ -143,5 +143,22 @@ namespace SmokingCessationSupportPlatform.Services
 
             return true;
         }
+
+        public async Task<bool> ChangePassword(int userId, string currentPassword, string newPassword)
+        {
+            var user = _accountRepository.GetUserById(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            if (!VerifyPassword(user.PasswordHash, currentPassword)) 
+            {
+                return false;
+            }
+            var newPasswordHash = HashPassword(newPassword);
+            user.PasswordHash = newPasswordHash;
+            _accountRepository.UpdateUserPasswordAsync(user,newPasswordHash);
+            return true;
+        }
     }
 }
