@@ -1,0 +1,214 @@
+﻿.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 150px); /* Adjust height based on header/footer/sidebar, 150px is an estimate */
+    background-color: #f9f9f9; /* Nền sáng hơn cho container chat */
+    border-radius: 15px; /* More rounded corners for the main container */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Softer, more pronounced shadow */
+    overflow: hidden; /* Ensures content stays within rounded corners */
+    margin-top: 25px; /* Increased space from page title */
+    font-family: 'Inter', sans-serif; /* Use Inter font */
+    transition: all 0.3s ease-in-out; /* Smooth transitions for container changes */
+}
+
+.message-list {
+    flex-grow: 1; 
+    padding: 25px; /* More padding */
+    overflow-y: auto; /* Enable scrolling for messages */
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Arrange messages in a column */
+    gap: 15px; /* Increased space between messages */
+    background-color: #fcfcfc; /* Nền gần trắng cho danh sách tin nhắn */
+    border-radius: 10px; /* Rounded corners for the message list itself */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.03); /* Subtle inner shadow */
+}
+
+/* Individual Message Item (from previous chat.css) */
+.message {
+    display: flex; /* Make message itself a flex container for alignment */
+    margin-bottom: 0; /* No margin-bottom here, gap handles spacing */
+    max-width: 80%; /* Allow messages to take slightly less width */
+    position: relative;
+    /* Add a subtle animation for new messages */
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style for messages sent by the current user (from previous chat.css, then overridden) */
+.message.mine {
+    justify-content: flex-end; /* Align content to the right */
+    align-self: flex-end; /* Align the message block to the right within message-list */
+}
+
+/* Style for messages sent by the other user/coach (from previous chat.css, then overridden) */
+.message.other {
+    justify-content: flex-start; /* Align content to the left */
+    align-self: flex-start; /* Align the message block to the left within message-list */
+}
+
+/* Style for the message bubble itself (from previous chat.css) */
+.message .message-bubble {
+    padding: 14px 20px; /* More padding for a softer look */
+    border-radius: 25px; /* More rounded bubble corners */
+    word-wrap: break-word; /* Wrap long words */
+    line-height: 1.6; /* Better readability */
+    font-size: 16px; /* Slightly larger font */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* More pronounced shadow for depth */
+    transition: all 0.2s ease-in-out; /* Smooth transition for hover */
+}
+
+    .message .message-bubble:hover {
+        transform: translateY(-2px); /* Slight lift on hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    }
+
+/* Tùy chỉnh màu sắc cho tin nhắn của User (khi là "mine") - OVERRIDE từ chat-user.css cũ */
+.message.mine .message-bubble {
+    background-color: #4CAF50; /* Một màu xanh lá cây tươi hơn */
+    color: white;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border-bottom-right-radius: 8px; /* Giữ bo góc */
+}
+
+/* Tùy chỉnh màu sắc cho tin nhắn của người khác (Coach, khi là "other") - OVERRIDE từ chat-user.css cũ */
+.message.other .message-bubble {
+    background-color: #f0f0f0; /* Màu xám nhạt hơn, gần trắng */
+    color: #444; /* Màu chữ tối hơn một chút */
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    border-bottom-left-radius: 8px;
+}
+
+/* Message header (sender name and time) (from previous chat.css) */
+.message > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-sender-name {
+    font-weight: 700; /* Even bolder font for sender name */
+    font-size: 14px;
+    color: #333; /* Darker color for sender name */
+    margin-bottom: 5px; /* More space between name and bubble */
+    padding-left: 12px; /* Indent sender name slightly */
+}
+
+.message.mine .message-sender-name {
+    text-align: right; /* Align sender name to the right for own messages */
+    padding-right: 12px;
+    padding-left: 0;
+}
+
+/* Tùy chỉnh màu cho tên người gửi (khi không phải tin của mình) - OVERRIDE từ chat-user.css cũ */
+.message.other .message-sender-name {
+    color: #007bff; /* Màu xanh dương cho tên Coach */
+}
+
+.message-info {
+    font-size: 11px; 
+    margin-top: 5px; 
+    text-align: right; 
+    padding-right: 12px; 
+}
+
+.message.other .message-info {
+    text-align: left; 
+    padding-left: 12px;
+    padding-right: 0;
+}
+
+.no-messages {
+    text-align: center;
+    color: #a0a0a0; 
+    padding: 20px;
+    font-style: italic;
+    font-size: 16px;
+}
+
+/* Chat Input Form (from previous chat.css, then overridden) */
+.chat-input-form {
+    display: flex;
+    padding: 20px 25px; /* More padding for input area */
+    border-top: 1px solid #e8e8e8; /* Lighter border */
+    background-color: #fcfcfc; /* Slightly off-white for input area */
+    gap: 15px; /* More space between input and button */
+    align-items: center; /* Vertically align items in the input form */
+}
+
+    .chat-input-form textarea {
+        flex-grow: 1;
+        border: 1px solid #c0c8d0; /* Softer border color */
+        border-radius: 30px; /* Even more rounded input field */
+        padding: 14px 22px; /* More padding */
+        font-size: 16px; /* Slightly larger font */
+        resize: none;
+        outline: none;
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); /* Slightly stronger inner shadow */
+        transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+    }
+
+        /* Tùy chỉnh màu border và shadow khi focus vào textarea - OVERRIDE từ chat-user.css cũ */
+        .chat-input-form textarea:focus {
+            border-color: #4CAF50; /* Border xanh lá khi focus */
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 0 4px rgba(76, 175, 80, 0.3); /* Glow xanh lá */
+        }
+
+    /* Tùy chỉnh màu sắc nút gửi - OVERRIDE từ chat-user.css cũ */
+    .chat-input-form button {
+        background-color: #007bff; /* Thay đổi nút gửi thành màu xanh dương */
+        background: linear-gradient(135deg, #007bff, #0056b3); /* Gradient */
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Shadow xanh dương */
+        color: white;
+        border: none;
+        border-radius: 30px; /* More rounded button */
+        padding: 14px 30px; /* More padding for button */
+        font-size: 17px; /* Slightly larger font */
+        font-weight: 600; /* Bolder text */
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease; /* Add transform for click effect */
+    }
+
+        .chat-input-form button:hover {
+            background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-2px); /* Hiệu ứng nhấc lên */
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        .chat-input-form button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+
+/* Tùy chỉnh thông báo lỗi (from previous chat.css, then overridden) */
+.alert.alert-danger {
+    background-color: #ffe0e6; /* Nền hồng nhạt */
+    color: #d32f2f; /* Chữ đỏ đậm */
+    border: 1px solid #f7baba;
+    border-radius: 10px; /* Slightly more rounded */
+    padding: 12px 20px; /* More padding */
+    margin-bottom: 20px; /* More space below alert */
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* Tùy chỉnh màu cho tiêu đề trang chat (from previous chat-user.css) */
+.main-content h1 {
+    color: #333; /* Giữ màu tối cho tiêu đề */
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}

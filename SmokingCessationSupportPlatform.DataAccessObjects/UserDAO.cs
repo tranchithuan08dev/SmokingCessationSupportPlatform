@@ -1,4 +1,5 @@
-﻿using SmokingCessationSupportPlatform.BusinessObjects.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
 using System;
 using System.Collections.Generic;
@@ -8,115 +9,25 @@ using System.Threading.Tasks;
 
 namespace SmokingCessationSupportPlatform.DataAccessObjects
 {
-    public static class UserDAO
+    public class UserDAO :  BaseDAO<User>
     {
+        public UserDAO(SmokingCessationSupportPlatformContext context) : base(context) { }
 
-        public static void DeleteUser(int userId)
+        public async Task<User?> GetUserByIdWithCoachInfoAsync(int id)
         {
-           
-            try
-            {
-                using var db = new SmokingCessationSupportPlatformContext();
-                var user = db.Users.FirstOrDefault(u => u.UserId == userId);
-                if (user == null)
-                {
-                    Console.WriteLine($"User with ID {userId} not found.");
-                    return;
-                }
-                user.IsActive = false; 
-                db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting user: {ex.Message}");
-            }
+            return await _dbSet
+                .Include(u => u.Coach) 
+                .FirstOrDefaultAsync(u => u.UserId == id);
         }
 
-        public static void AddUser(User user)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
-            try
-            {
-                using var db = new SmokingCessationSupportPlatformContext();
-                db.Users.Add(user);
-                db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding user: {ex.Message}");
-
-            }
+            return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public static void UpdateUser(User user)
+        public async Task<List<User>> GetUsersByIdsAsync(IEnumerable<int> ids)
         {
-            try
-            {
-                using var db = new SmokingCessationSupportPlatformContext();
-                db.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error updating user: {ex.Message}");
-
-            }
-        }
-
-        public static List<User> GetAllUsers()
-        {
-            try
-            {
-                using var db = new SmokingCessationSupportPlatformContext();
-                var users = db.Users.ToList();
-                return users;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving users: {ex.Message}");
-                return new List<User>();
-
-            }
-        }
-
-         public static User GetUserById(int userId)
-        {
-            try
-            {
-                using var db = new SmokingCessationSupportPlatformContext();
-                var user = db.Users.FirstOrDefault(u => u.UserId == userId);
-                if(user == null)
-                {
-                    Console.WriteLine($"User with ID {userId} not found.");
-                    return null;
-                }
-                return user;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving user by ID: {ex.Message}");
-                return null;
-            }
-           
-        }
-
-        public static User GetUserByUsername(string username)
-        {
-            try
-            {
-                using var db = new SmokingCessationSupportPlatformContext();
-                var user = db.Users.FirstOrDefault(u => u.Username == username);
-                if (user == null)
-                {
-                    Console.WriteLine($"User with username {username} not found.");
-                    return null;
-                }
-                return user;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving user by username: {ex.Message}");
-                return null;
-            }
+            return await _dbSet.Where(u => ids.Contains(u.UserId)).ToListAsync();
         }
 
     }

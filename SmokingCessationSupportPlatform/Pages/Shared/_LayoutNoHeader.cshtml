@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SmokingCessationSupportPlatform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/HomePage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/coach-dashboard.css" />
+    <link rel="stylesheet" href="~/SmokingCessationSupportPlatform.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    @RenderSection("Head", required: false)
+</head>
+<body>
+    <section id="sidebar">
+        <a href="/Coach/Dashboard" class="brand">
+            <i class='bx bxs-smile'></i>
+            <span class="text">Coach Dashboard</span>
+        </a>
+        <ul class="side-menu top">
+            <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/Dashboard" ? "active" : "")">
+                <a href="/Coach/Dashboard">
+                    <i class="bx bxs-dashboard"></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/Analytics" ? "active" : "")">
+                <a href="/Coach/Analytics">
+                    <i class="bx bxs-doughnut-chart"></i>
+                    <span class="text">Analytics</span>
+                </a>
+            </li>
+            <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/Message" ? "active" : "")">
+                <a href="/Coach/Message">
+                    <i class="bx bxs-message-dots"></i>
+                    <span class="text">Message</span>
+                </a>
+            </li>
+            <li class="@(ViewContext.HttpContext.Request.Path == "/Coach/Team" ? "active" : "")">
+                <a href="/Coach/Team">
+                    <i class="bx bxs-group"></i>
+                    <span class="text">Team</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Auth/Logout">
+                    <i class="bx bx-log-out-circle"></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu bottom">
+            <li>
+                <a href="/Coach/Settings">
+                    <i class='bx bx-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <div class="container">
+        <main role="main" ">
+        @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted mt-2 py-2">
+        <div class="container text-center">
+            &copy; @DateTime.Now.Year - SmokingCessationSupportPlatform - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

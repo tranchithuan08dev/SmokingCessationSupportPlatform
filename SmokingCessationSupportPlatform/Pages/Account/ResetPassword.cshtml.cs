@@ -85,7 +85,7 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Account
                 }
                 return Page();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
                 Message = "An unexpected error occurred. Please try again.";

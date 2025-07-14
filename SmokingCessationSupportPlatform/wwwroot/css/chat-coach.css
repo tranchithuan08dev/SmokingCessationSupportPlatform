@@ -1,0 +1,237 @@
+﻿/* chat-coach.css */
+
+/* --- GENERAL CHAT CONTAINER STYLES --- */
+.main-content {
+    /* Đảm bảo nội dung chat nằm đúng vị trí và có khoảng trống */
+    padding: 20px;
+    max-width: 900px; /* Giới hạn chiều rộng tối đa của container chat */
+    margin: 0 auto; /* Căn giữa container */
+    background-color: #f9f9f9; /* Nền nhẹ cho khu vực chính */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Đổ bóng nhẹ tạo chiều sâu */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px); /* Chiều cao chiếm phần còn lại của viewport, trừ đi padding/margin của layout */
+}
+
+h1 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Chiếm toàn bộ chiều cao còn lại của main-content */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Đảm bảo nội dung bên trong không tràn ra ngoài */
+}
+
+/* --- MESSAGE LIST STYLES --- */
+.message-list {
+    flex-grow: 1; /* Cho phép danh sách tin nhắn chiếm hết không gian có thể */
+    padding: 15px;
+    overflow-y: auto; /* Tạo thanh cuộn khi tin nhắn vượt quá chiều cao */
+    display: flex; /* Dùng flexbox để sắp xếp tin nhắn */
+    flex-direction: column; /* Tin nhắn xếp chồng lên nhau */
+    gap: 10px; /* Khoảng cách giữa các tin nhắn */
+    scroll-behavior: smooth; /* Cuộn mượt mà */
+}
+
+.no-messages {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* --- INDIVIDUAL MESSAGE STYLES --- */
+.message-item {
+    max-width: 80%; /* Giới hạn chiều rộng tin nhắn */
+    padding: 10px 15px;
+    border-radius: 18px; /* Bo tròn các góc tin nhắn */
+    position: relative; /* Cho phép định vị các phần tử con */
+    word-wrap: break-word; /* Ngắt chữ khi quá dài */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.8em;
+    color: #777;
+}
+
+.message-sender {
+    font-weight: bold;
+}
+
+.message-time {
+    font-size: 0.75em;
+    color: #999;
+}
+
+.message-content {
+    margin: 0;
+    line-height: 1.4;
+    font-size: 0.95em;
+    color: #333;
+}
+
+/* --- COACH MESSAGE (SENT BY YOU) --- */
+.coach-message {
+    align-self: flex-end; /* Căn phải tin nhắn của Coach */
+    background-color: #dcf8c6; /* Màu xanh lá nhạt */
+    color: #333;
+    border-bottom-right-radius: 2px; /* Góc dưới bên phải ít bo tròn hơn */
+    margin-left: auto; /* Đẩy tin nhắn sang phải */
+}
+
+    .coach-message .message-header {
+        flex-direction: row-reverse; /* Đổi thứ tự header */
+    }
+
+    .coach-message .message-sender {
+        color: #4CAF50; /* Màu sender nổi bật */
+    }
+
+
+/* --- MEMBER MESSAGE (RECEIVED) --- */
+.member-message {
+    align-self: flex-start; /* Căn trái tin nhắn của Member */
+    background-color: #f0f0f0; /* Màu xám nhạt */
+    color: #333;
+    border-bottom-left-radius: 2px; /* Góc dưới bên trái ít bo tròn hơn */
+    margin-right: auto; /* Đẩy tin nhắn sang trái */
+}
+
+    .member-message .message-sender {
+        color: #007bff; /* Màu sender nổi bật */
+    }
+
+
+/* --- CHAT INPUT FORM STYLES --- */
+.chat-input-form {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee; /* Đường kẻ phân cách */
+    background-color: #f9f9f9;
+    align-items: flex-end; /* Căn chỉnh các thành phần ở dưới cùng */
+    gap: 10px; /* Khoảng cách giữa textarea và button */
+}
+
+    .chat-input-form textarea {
+        flex-grow: 1; /* Cho phép textarea chiếm hết không gian */
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1em;
+        resize: none; /* Không cho phép người dùng thay đổi kích thước thủ công */
+        min-height: 40px; /* Chiều cao tối thiểu */
+        max-height: 120px; /* Chiều cao tối đa, sau đó sẽ xuất hiện thanh cuộn */
+        overflow-y: auto;
+    }
+
+        .chat-input-form textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+    .chat-input-form button {
+        padding: 10px 20px;
+        background-color: #007bff; /* Màu xanh dương */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+        flex-shrink: 0; /* Ngăn nút bị co lại */
+    }
+
+        .chat-input-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .chat-input-form button:active {
+            background-color: #004085;
+        }
+
+/* --- VALIDATION MESSAGE STYLES --- */
+.text-danger {
+    color: #dc3545; /* Màu đỏ cho lỗi */
+    font-size: 0.85em;
+    margin-top: 5px;
+    position: absolute; /* Định vị tuyệt đối để không làm xáo trộn layout */
+    bottom: 5px; /* Điều chỉnh vị trí nếu cần */
+    left: 15px;
+    width: calc(100% - 30px); /* Đảm bảo lỗi nằm trong form */
+}
+
+/* Adjust form padding to make space for validation message if needed */
+.chat-input-form {
+    padding-bottom: 25px; /* Thêm khoảng trống ở dưới cho lỗi */
+    position: relative; /* Để .text-danger có thể định vị tương đối với form */
+}
+
+
+/* --- RESPONSIVENESS (Optional but Recommended) --- */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+        height: calc(100vh - 60px); /* Điều chỉnh chiều cao trên thiết bị nhỏ hơn */
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+
+    .message-item {
+        max-width: 90%;
+        padding: 8px 12px;
+    }
+
+    .message-header {
+        font-size: 0.7em;
+    }
+
+    .message-content {
+        font-size: 0.9em;
+    }
+
+    .chat-input-form {
+        flex-direction: column; /* Xếp chồng textarea và button trên màn hình nhỏ */
+        gap: 8px;
+        padding: 10px;
+    }
+
+        .chat-input-form textarea {
+            min-height: 35px;
+        }
+
+        .chat-input-form button {
+            width: 100%; /* Nút chiếm toàn bộ chiều rộng */
+            padding: 8px 15px;
+        }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 5px;
+    }
+
+    h1 {
+        font-size: 1.2em;
+    }
+}

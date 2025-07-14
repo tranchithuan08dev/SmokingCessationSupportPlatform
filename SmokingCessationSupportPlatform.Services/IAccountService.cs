@@ -18,5 +18,7 @@ namespace SmokingCessationSupportPlatform.Services
         User? GetUserByEmail(string email);
         Task<string?> GenerateAndSavePasswordResetTokenAsync(string email);
         Task<bool> ResetPasswordAsync(string email, string token, string newPassword); 
+
+        Task<bool> ChangePassword(int userId, string currentPassword, string newPassword);
     }
 }

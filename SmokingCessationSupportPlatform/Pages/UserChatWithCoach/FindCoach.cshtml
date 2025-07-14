@@ -1,0 +1,39 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.UserChatWithCoach.FindCoachModel
+@{
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/find-coach.css" /> 
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+}
+
+<div class="main-content">
+    <h1>Find a Coach</h1>
+
+    @if (Model.AvailableCoaches != null && Model.AvailableCoaches.Any())
+    {
+        <div class="coach-list">
+            @foreach (var coach in Model.AvailableCoaches)
+            {
+                <div class="coach-item">
+                    <div class="coach-info">
+                        <h3><i class='bx bxs-user-circle'></i> @(coach.CoachNavigation?.Username ?? $"Coach ID: {coach.CoachId}")</h3>
+                        <p>Specialization: @coach.Specialization</p> 
+                        <p>ExperrienceYears: @coach.ExperienceYears</p> 
+                    </div>
+                    <a asp-page="/Chat"
+                       asp-route-partnerId="@coach.CoachId"
+                       asp-route-partnerType="Coach"
+                       class="chat-button">
+                        <i class='bx bx-chat'></i> Chat Now
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Not available Coaches now.</p>
+    }
+</div>
