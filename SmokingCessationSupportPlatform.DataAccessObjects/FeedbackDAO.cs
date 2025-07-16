@@ -1,41 +1,39 @@
 ﻿using SmokingCessationSupportPlatform.BusinessObjects.Models;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmokingCessationSupportPlatform.DataAccessObjects
 {
-    public class BlogPostDAO
+    public class FeedbackDAO
     {
-        public static List<BlogPost> GetAllBlogPosts()
+        public static List<Feedback> GetAllFeedbacks()
         {
             try
             {
                 using var context = new SmokingCessationSupportPlatformContext();
-                return context.BlogPosts.ToList();
+                return context.Feedbacks
+                              .Include(f => f.User)
+                              .OrderByDescending(f => f.FeedbackDate)
+                              .ToList();
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving blog posts.", ex);
+                throw new Exception("Error retrieving feedbacks", ex);
             }
         }
-
-        public static void CreateBlogPost(BlogPost post)
+        public static void CreateFeedback(Feedback feedback)
         {
             try
             {
                 using var context = new SmokingCessationSupportPlatformContext();
-                context.BlogPosts.Add(post);
+                context.Feedbacks.Add(feedback);
                 context.SaveChanges();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lỗi khi tạo bài viết: " + ex.ToString());
-                throw new Exception("Lỗi khi tạo blog mới: " + ex.Message, ex);
+                throw new Exception("Lỗi khi lưu phản hồi", ex);
             }
         }
+
     }
 }
