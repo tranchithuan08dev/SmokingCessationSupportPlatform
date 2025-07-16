@@ -2,10 +2,125 @@
 @model SmokingCessationSupportPlatform.Web.Pages.Admin.DashboardModel
 @{
     ViewData["Title"] = "Admin Dashboard";
+    Layout = "_LayoutNoHeader";
 }
 
-<div class="container py-4">
-    <h2 class="mb-4 text-success">Welcome to the Admin Dashboard!</h2>
-    <p>If you see this page, you are successfully authenticated and authorized as an Admin.</p>
-    <p>This is a placeholder content to confirm access.</p>
-</div>
+<style>
+    :root {
+        --sidebar-bg: #1f2937;
+        --sidebar-hover: #374151;
+        --text-color: #f3f4f6;
+        --accent: #10b981;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: var(--sidebar-bg);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-top: 1rem;
+        z-index: 1000;
+    }
+
+        #sidebar .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            color: var(--accent);
+            padding: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        #sidebar .side-menu {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+            #sidebar .side-menu li {
+                margin: 0;
+            }
+
+                #sidebar .side-menu li a {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 20px;
+                    color: var(--text-color);
+                    text-decoration: none;
+                    transition: background 0.3s ease;
+                    font-size: 1rem;
+                }
+
+                    #sidebar .side-menu li a:hover {
+                        background-color: var(--sidebar-hover);
+                        color: var(--accent);
+                    }
+
+                    #sidebar .side-menu li a i {
+                        font-size: 1.2rem;
+                        margin-right: 10px;
+                    }
+
+            #sidebar .side-menu.bottom {
+                margin-top: auto;
+                border-top: 1px solid #374151;
+                padding-top: 0.5rem;
+            }
+</style>
+
+<section id="sidebar">
+    <a href="/Admin/Dashboard" class="brand">
+        <i class='bx bxs-smile'></i>
+        <span class="text">Admin Dashboard</span>
+    </a>
+    <ul class="side-menu top">
+        <li>
+            <a href="/Admin/Dashboard">
+                <i class="bx bxs-dashboard"></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Admin/Analytics">
+                <i class="bx bxs-doughnut-chart"></i>
+                <span class="text">Analytics</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Admin/Message">
+                <i class="bx bxs-message-dots"></i>
+                <span class="text">Message</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Admin/ManageAccount">
+                <i class="bx bxs-group"></i> <span class="text">Manager Account</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Account/Logout">
+                <i class="bx bx-log-out-circle"></i> <span class="text">Logout</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="side-menu bottom">
+        <li>
+            <a href="/Admin/Settings">
+                <i class='bx bx-cog'></i>
+                <span class="text">Settings</span>
+            </a>
+        </li>
+    </ul>
+</section>

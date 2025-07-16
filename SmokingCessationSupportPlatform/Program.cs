@@ -34,11 +34,13 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<IConservationRepository, ConversationRepository>();
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<AdminRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IUserAuthentification, UserAuthentification>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<AdminService>();
             builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

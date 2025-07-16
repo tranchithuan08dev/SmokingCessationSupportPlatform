@@ -1,0 +1,65 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Admin.ManageAccountModel
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "_LayoutNoHeader";
+}
+
+<a href="/Admin/Dashboard" class="brand">
+    <i class='bx bxs-smile'></i>
+    <span class="text">Admin Dashboard</span>
+</a>
+
+<h2>Danh sách người dùng</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>
+                    @user.UserRole
+                    @if (user.UserRole == "Member")
+                    {
+                        <form method="post" asp-page-handler="Promote" style="display:inline;">
+                            <input type="hidden" name="userId" value="@user.UserId" />
+                            <button type="submit" class="btn btn-sm btn-success ms-2">Promote to Coach</button>
+                        </form>
+                    }
+                </td>
+                <td>
+                    @(user.IsActive == true ? "Hoạt động" : "Đã khóa")
+                    <form method="post" asp-page-handler="ToggleStatus" style="display:inline;">
+                        <input type="hidden" name="userId" value="@user.UserId" />
+                        <button type="submit" class="btn btn-sm btn-warning ms-2">
+                            @(user.IsActive == true ? "Khóa" : "Mở khóa")
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <!-- Có thể thêm nút chỉnh sửa, xóa tại đây -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Head {
+    <style>
+        #sidebar {
+            display: none !important;
+        }
+    </style>
+}
