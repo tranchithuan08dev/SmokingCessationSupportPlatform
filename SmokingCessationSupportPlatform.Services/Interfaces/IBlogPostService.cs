@@ -10,5 +10,6 @@ namespace SmokingCessationSupportPlatform.Services.Interfaces
     public interface IBlogPostService
     {
         List<BlogPost> GetAllBlogPosts();
+        void CreateBlogPost(BlogPost blogPost);
     }
 }

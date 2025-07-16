@@ -10,5 +10,7 @@ namespace SmokingCessationSupportPlatform.Services.Interfaces
     public interface IUserService
     {
         List<User> GetAllUser();
+        Task DeleteUserAsync(User user);
+        Task<User?> GetUserByIdAsync(int id);
     }
 }

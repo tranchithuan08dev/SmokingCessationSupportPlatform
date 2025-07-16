@@ -20,6 +20,10 @@ namespace SmokingCessationSupportPlatform.Services.Implementations
         }
         public List<BlogPost> GetAllBlogPosts() =>
             _blogPostRepository.GetAllBlogPosts();
+        public void CreateBlogPost(BlogPost post)
+        {
+            _blogPostRepository.CreateBlogPost(post);
+        }
 
     }
 }
