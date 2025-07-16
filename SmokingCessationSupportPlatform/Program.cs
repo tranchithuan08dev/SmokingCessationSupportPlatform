@@ -52,9 +52,14 @@ namespace SmokingCessationSupportPlatform
 
             builder.Services.AddScoped<IQuitPlanStagesRepository, QuitPlanStagesRepository>();
             builder.Services.AddScoped<IQuitPlanStagesService, QuitPlanStagesService>();
-            builder.Services.AddScoped<IBlogPostRepository, BlogPostReposiory>();
+            builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
             builder.Services.AddScoped<IBlogPostService, BlogPostService>();
             builder.Services.AddSignalR();
+
+            builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+            builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
+
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
