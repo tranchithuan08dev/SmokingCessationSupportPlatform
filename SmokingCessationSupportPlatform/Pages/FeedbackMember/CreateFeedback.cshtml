@@ -1,0 +1,30 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.FeedbackMember.CreateFeedbackModel
+
+<h2 class="text-center">Gửi phản hồi</h2>
+
+<form method="post" class="container mt-4">
+    <div class="mb-3">
+        <label asp-for="FeedbackInput.FeedbackType" class="form-label">Loại phản hồi</label>
+        <input asp-for="FeedbackInput.FeedbackType" class="form-control" />
+        <span asp-validation-for="FeedbackInput.FeedbackType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FeedbackInput.Subject" class="form-label">Chủ đề</label>
+        <input asp-for="FeedbackInput.Subject" class="form-control" />
+        <span asp-validation-for="FeedbackInput.Subject" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FeedbackInput.Message" class="form-label">Nội dung</label>
+        <textarea asp-for="FeedbackInput.Message" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="FeedbackInput.Message" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Gửi phản hồi</button>
+</form>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}
