@@ -10,6 +10,35 @@
 }
 <div class="main-content">
     <h1>Tạo Blog</h1>
+    <div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">📝 Tạo Blog Mới</h2>
 
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="Blog.Title" class="form-label">Tiêu đề</label>
+            <input asp-for="Blog.Title" class="form-control" />
+            <span asp-validation-for="Blog.Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Blog.Category" class="form-label">Loại bài viết</label>
+            <input asp-for="Blog.Category" class="form-control" />
+            <span asp-validation-for="Blog.Category" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Blog.Content" class="form-label">Nội dung</label>
+            <textarea asp-for="Blog.Content" rows="6" class="form-control"></textarea>
+            <span asp-validation-for="Blog.Content" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Đăng bài</button>
+        <a asp-page="/Index" class="btn btn-secondary ms-2">Hủy</a>
+    </form>
+</div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
     
 </div>
