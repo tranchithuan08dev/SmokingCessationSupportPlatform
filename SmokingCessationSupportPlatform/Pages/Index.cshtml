@@ -1,4 +1,5 @@
 ﻿@page
+@using SmokingCessationSupportPlatform.Web.Pages
 @model IndexModel
 @{
     ViewData["Title"] = "Trang Chủ";
@@ -132,5 +133,26 @@
         }
         
         
+    </div>
+</section>
+<section class="container mt-5 mb-5">
+    <h2 class="text-center text-success mb-4">🗣️ Phản hồi từ người dùng</h2>
+
+    <div class="row">
+        @foreach (var feedback in Model.ListFeedbacks)
+        {
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@feedback.Subject (@feedback.FeedbackType)</h6>
+                            <p class="card-text">"@feedback.Message"</p>
+                            <p class="text-muted text-end small">
+                                — @feedback.User?.FullName ?? "Ẩn danh"
+                                (@feedback.FeedbackDate?.ToString("dd/MM/yyyy"))
+                            </p>
+                        </div>
+                    </div>
+                </div>
+        }
     </div>
 </section>
