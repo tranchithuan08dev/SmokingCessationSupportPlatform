@@ -1,0 +1,43 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Admin.EditAchievementModel
+@{
+    ViewData["Title"] = "Edit Achievement";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">✏️ Edit Achievement</h2>
+
+    @if (Model.Achievement != null)
+    {
+        <form method="post">
+            <input type="hidden" asp-for="Achievement.AchievementId" />
+
+            <div class="mb-3">
+                <label asp-for="Achievement.AchievementName" class="form-label">Name</label>
+                <input asp-for="Achievement.AchievementName" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Achievement.Description" class="form-label">Description</label>
+                <textarea asp-for="Achievement.Description" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Achievement.Criteria" class="form-label">Criteria</label>
+                <input asp-for="Achievement.Criteria" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Achievement.IconUrl" class="form-label">Icon URL</label>
+                <input asp-for="Achievement.IconUrl" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+            <a asp-page="/Admin/Achievements" class="btn btn-secondary">↩️ Back</a>
+        </form>
+    }
+    else
+    {
+        <div class="alert alert-danger">Achievement not found.</div>
+    }
+</div>

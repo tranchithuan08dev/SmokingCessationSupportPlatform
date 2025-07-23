@@ -1,0 +1,228 @@
+﻿@page
+@model SmokingCessationSupportPlatform.Web.Pages.Admin.AchievementsModel
+@{
+    ViewData["Title"] = "Manage Achievements";
+    var achievements = Model.AchievementList;
+    Layout = "_LayoutNoHeader";
+}
+<style>
+    :root {
+        --sidebar-bg: #1f2937;
+        --sidebar-hover: #374151;
+        --text-color: #f3f4f6;
+        --accent: #10b981;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: var(--sidebar-bg);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-top: 1rem;
+        z-index: 1000;
+    }
+
+        #sidebar .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            color: var(--accent);
+            padding: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        #sidebar .side-menu {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+            #sidebar .side-menu li {
+                margin: 0;
+            }
+
+                #sidebar .side-menu li a {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 20px;
+                    color: var(--text-color);
+                    text-decoration: none;
+                    transition: background 0.3s ease;
+                    font-size: 1rem;
+                }
+
+                    #sidebar .side-menu li a:hover {
+                        background-color: var(--sidebar-hover);
+                        color: var(--accent);
+                    }
+
+                    #sidebar .side-menu li a i {
+                        font-size: 1.2rem;
+                        margin-right: 10px;
+                    }
+
+            #sidebar .side-menu.bottom {
+                margin-top: auto;
+                border-top: 1px solid #374151;
+                padding-top: 0.5rem;
+            }
+</style>
+
+<section id="sidebar">
+    <a href="/Admin/Dashboard" class="brand">
+        <i class='bx bxs-smile'></i>
+        <span class="text">Admin Dashboard</span>
+    </a>
+    <ul class="side-menu top">
+        <li>
+            <a href="/Admin/Dashboard">
+                <i class="bx bxs-dashboard"></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Admin/Achievements">
+                <i class="bx bxs-doughnut-chart"></i>
+                <span class="text">Achivements</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Admin/ManageAccount">
+                <i class="bx bxs-group"></i> <span class="text">Manager Account</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Account/Logout">
+                <i class="bx bx-log-out-circle"></i> <span class="text">Logout</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="side-menu bottom">
+        <li>
+            <a href="/Admin/Settings">
+                <i class='bx bx-cog'></i>
+                <span class="text">Settings</span>
+            </a>
+        </li>
+    </ul>
+</section>
+
+<section style="margin-left: 250px; padding: 2rem;">
+    <h2 class="mb-4">🏆 Achievements Management</h2>
+
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">➕ Add Achievement</button>
+
+    <table class="table table-hover table-bordered bg-white shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Icon</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Criteria</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (achievements != null)
+            {
+                int i = 1;
+                foreach (var a in achievements)
+                {
+                    <tr>
+                        <td>@(i++)</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(a.IconUrl))
+                            {
+                                <img src="@a.IconUrl" width="40" height="40" />
+                            }
+                        </td>
+                        <td>@a.AchievementName</td>
+                        <td>@a.Description</td>
+                        <td>@a.Criteria</td>
+                        <td>
+                            <a class="btn btn-sm btn-primary" href="/Admin/EditAchievement?id=@a.AchievementId">Edit</a>
+                            <button class="btn btn-sm btn-danger" onclick="openDeleteModal(@a.AchievementId)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</section>
+
+<!-- Modal for creating achievement -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" asp-page-handler="Create">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="createModalLabel">Add New Achievement</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="AchievementName" class="form-control" required />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Description</label>
+                        <textarea name="Description" class="form-control"></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Criteria</label>
+                        <input type="text" name="Criteria" class="form-control" />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Icon URL</label>
+                        <input type="text" name="IconUrl" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Create</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" asp-page-handler="Delete">
+            <input type="hidden" name="AchievementId" id="deleteId" />
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>⚠️ Bạn có chắc chắn muốn xóa thành tích này?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="submit">Xóa</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function openDeleteModal(id) {
+        document.getElementById('deleteId').value = id;
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+</script>

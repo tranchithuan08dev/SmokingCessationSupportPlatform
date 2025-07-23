@@ -34,7 +34,7 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<ConversationDAO>();
             builder.Services.AddScoped<MessageDAO>();
             builder.Services.AddScoped<QuitProcessRepository>();
-          
+
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICoachRepository, CoachRepository>();
@@ -42,6 +42,9 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<AdminRepository>();
+            builder.Services.AddScoped<AdminService>();
+            builder.Services.AddScoped<DashboardService>();
+            builder.Services.AddScoped<AchievementRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
             builder.Services.AddScoped<IMembershipService, MembershipService>();
@@ -50,8 +53,9 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<IUserAuthentification, UserAuthentification>();
             builder.Services.AddScoped<IQuitProcessRepository, QuitProcessRepository>();
             builder.Services.AddScoped<IQuitProcessService, QuitProcessService>();
-            builder.Services.AddScoped<IUserService, UserService>();
-
+            builder.Services.AddScoped<IUserService, Services.Implementations.UserService>();
+            builder.Services.AddScoped<Services.UserService>();
+            builder.Services.AddScoped<AchievementService>();
             builder.Services.AddScoped<IQuitPlanRepository, QuitPlanRepository>();
             builder.Services.AddScoped<IQuitPlanService, QuitPlanService>();
 

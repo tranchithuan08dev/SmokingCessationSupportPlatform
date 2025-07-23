@@ -47,6 +47,12 @@ namespace SmokingCessationSupportPlatform.Services
                 _context.SaveChanges();
                 return user;
             }
+            else
+            {
+                user.UserRole = "Member";
+                _context.SaveChanges();
+                return user;
+            }
             return null;
         }
     }

@@ -93,15 +93,9 @@
             </a>
         </li>
         <li>
-            <a href="/Admin/Analytics">
+            <a href="/Admin/Achievements">
                 <i class="bx bxs-doughnut-chart"></i>
-                <span class="text">Analytics</span>
-            </a>
-        </li>
-        <li>
-            <a href="/Admin/Message">
-                <i class="bx bxs-message-dots"></i>
-                <span class="text">Message</span>
+                <span class="text">Achivements</span>
             </a>
         </li>
         <li>
@@ -115,12 +109,53 @@
             </a>
         </li>
     </ul>
-    <ul class="side-menu bottom">
-        <li>
-            <a href="/Admin/Settings">
-                <i class='bx bx-cog'></i>
-                <span class="text">Settings</span>
-            </a>
-        </li>
-    </ul>
+</section>
+<section style="margin-left:260px; padding:2rem;">
+    <h2>Membership Statistics</h2>
+
+    <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <div class="card text-white bg-success" style="flex: 1; min-width: 220px;">
+            <div class="card-body">
+                <h5 class="card-title">Active Plans</h5>
+                <p class="card-text" style="font-size: 2rem;">@Model.ActivePlans</p>
+            </div>
+        </div>
+        <div class="card text-white bg-secondary" style="flex: 1; min-width: 220px;">
+            <div class="card-body">
+                <h5 class="card-title">Inactive Plans</h5>
+                <p class="card-text" style="font-size: 2rem;">@Model.InactivePlans</p>
+            </div>
+        </div>
+        <div class="card text-white bg-primary" style="flex: 1; min-width: 220px;">
+            <div class="card-body">
+                <h5 class="card-title">Total Members</h5>
+                <p class="card-text" style="font-size: 2rem;">@Model.TotalUsers</p>
+            </div>
+        </div>
+        <div class="card text-white bg-warning" style="flex: 1; min-width: 220px;">
+            <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <p class="card-text" style="font-size: 2rem;">$@Model.Revenue.ToString("N2")</p>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mt-5">Users per Membership Plan</h4>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Plan Name</th>
+                <th>User Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.UsersPerPlan)
+            {
+                <tr>
+                    <td>@item.Key</td>
+                    <td>@item.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </section>

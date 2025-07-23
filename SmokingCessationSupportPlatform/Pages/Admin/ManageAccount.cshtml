@@ -39,6 +39,13 @@
                             <button type="submit" class="btn btn-sm btn-success ms-2">Promote to Coach</button>
                         </form>
                     }
+                    else if(user.UserRole == "Coach")
+                    {
+                        <form method="post" asp-page-handler="Promote" style="display:inline;">
+                            <input type="hidden" name="userId" value="@user.UserId" />
+                            <button type="submit" class="btn btn-sm ms-2" style="background-color: #f97316; color: white;">Promote to Member</button>
+                        </form>
+                    }
                 </td>
                 <td>
                     @(user.IsActive == true ? "Hoạt động" : "Đã khóa")

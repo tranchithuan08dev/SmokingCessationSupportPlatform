@@ -38,6 +38,11 @@ namespace SmokingCessationSupportPlatform.Pages
                 return RedirectToPage("/Coach/CoachDashboard");
             }
 
+            if (userRoleClaim.Value.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToPage("/Admin/Dashboard");
+            }
+
             // Nếu là User thông thường
             var member = await _userService.GetUserWithProgressAsync(userId);
             if (member != null)
