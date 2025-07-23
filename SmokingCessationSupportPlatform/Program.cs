@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using SmokingCessationSupportPlatform.Data;
 using SmokingCessationSupportPlatform.DataAccessObjects;
 using SmokingCessationSupportPlatform.DataAccessObjects.Contexts;
 using SmokingCessationSupportPlatform.Repositories;
+using SmokingCessationSupportPlatform.Repositories.Implementations;
+using SmokingCessationSupportPlatform.Repositories.Interfaces;
 using SmokingCessationSupportPlatform.Services;
+using SmokingCessationSupportPlatform.Services.Implementations;
+using SmokingCessationSupportPlatform.Services.Interfaces;
 
 namespace SmokingCessationSupportPlatform
 {
@@ -14,6 +19,7 @@ namespace SmokingCessationSupportPlatform
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages(
                 options =>
                 {
@@ -27,7 +33,8 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<CoachDAO>();
             builder.Services.AddScoped<ConversationDAO>();
             builder.Services.AddScoped<MessageDAO>();
-
+            builder.Services.AddScoped<QuitProcessRepository>();
+          
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICoachRepository, CoachRepository>();
@@ -36,11 +43,20 @@ namespace SmokingCessationSupportPlatform
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<AdminRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<IMembershipService, MembershipService>();
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IUserAuthentification, UserAuthentification>();
-            builder.Services.AddScoped<UserService>();
-            builder.Services.AddScoped<AdminService>();
+            builder.Services.AddScoped<IQuitProcessRepository, QuitProcessRepository>();
+            builder.Services.AddScoped<IQuitProcessService, QuitProcessService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddScoped<IQuitPlanRepository, QuitPlanRepository>();
+            builder.Services.AddScoped<IQuitPlanService, QuitPlanService>();
+
+            builder.Services.AddScoped<IQuitPlanStagesRepository, QuitPlanStagesRepository>();
+            builder.Services.AddScoped<IQuitPlanStagesService, QuitPlanStagesService>();
             builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -57,7 +73,7 @@ namespace SmokingCessationSupportPlatform
 
 
             builder.Services.AddDbContext<SmokingCessationSupportPlatformContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyStoreContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -75,8 +91,19 @@ namespace SmokingCessationSupportPlatform
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
             app.MapHub<ChatHub>("/chatHub");
+
+            // Seed data - ensure database is created and seeded
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<SmokingCessationSupportPlatformContext>();
+                context.Database.EnsureCreated();
+                SeedData.Initialize(scope.ServiceProvider);
+            }
 
             app.Run();
         }

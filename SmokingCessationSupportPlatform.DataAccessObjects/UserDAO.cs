@@ -25,5 +25,21 @@ namespace SmokingCessationSupportPlatform.DataAccessObjects
             return await _dbSet.Where(u => ids.Contains(u.UserId)).ToListAsync();
         }
 
+
+        public static List<User> GetAllUserMember()
+        {
+            var listUser = new List<User>();
+            try
+            {
+                using var context = new SmokingCessationSupportPlatformContext();
+                listUser = context.Users.Where(u => u.UserRole.Equals("Member")).ToList();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listUser;
+        }
+
     }
 }

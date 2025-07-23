@@ -1,0 +1,73 @@
+@model List<SmokingCessationSupportPlatform.Models.MembershipPlanViewModel>
+
+@{
+    ViewData["Title"] = "Gói Thành Viên";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Chọn Gói Thành Viên</h2>
+            <p class="text-center text-muted mb-5">Đăng ký thành viên để sử dụng đầy đủ tính năng của hệ thống</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        @foreach (var plan in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h4 class="mb-0">@plan.PlanName</h4>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center mb-3">
+                            <h3 class="text-primary">@plan.Price.ToString("N0") VNĐ</h3>
+                            <small class="text-muted">/ @plan.DurationDays ngày</small>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="card-text">@plan.Description</p>
+                        </div>
+
+                        <div class="mt-auto">
+                            <a href="@Url.Action("Subscribe", "Membership", new { planId = plan.PlanId })" 
+                               class="btn btn-primary w-100">
+                                Chọn Gói Này
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle"></i> Lợi ích khi trở thành thành viên:</h5>
+                <ul class="mb-0">
+                    <li>Truy cập đầy đủ các tính năng hỗ trợ cai thuốc lá</li>
+                    <li>Được tư vấn trực tiếp từ các chuyên gia</li>
+                    <li>Theo dõi tiến trình cai thuốc chi tiết</li>
+                    <li>Nhận thông báo và lời khuyên cá nhân hóa</li>
+                    <li>Tham gia cộng đồng hỗ trợ</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+}
+</style> 
