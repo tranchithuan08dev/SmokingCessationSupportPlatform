@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SmokingCessationSupportPlatform.BusinessObjects.Models;
 
@@ -52,7 +50,7 @@ public partial class SmokingCessationSupportPlatformContext : DbContext
     public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
 
-
+ 
     string GetConnectionString()
     {
         IConfiguration config = new ConfigurationBuilder()

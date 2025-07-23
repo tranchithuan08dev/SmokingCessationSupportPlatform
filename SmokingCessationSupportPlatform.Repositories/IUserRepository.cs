@@ -16,5 +16,7 @@ namespace SmokingCessationSupportPlatform.Repositories
         Task AddUserAsync(User user);
         Task UpdateUserAsync(User user);
         Task DeleteUserAsync(User user);
+
+        List<User> GetAllUsers();
     }
 }
