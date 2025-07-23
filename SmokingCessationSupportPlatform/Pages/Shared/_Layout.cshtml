@@ -112,7 +112,7 @@
             margin-bottom: 1.5rem;
         }
     </style>
-
+    @await RenderSectionAsync("Head", required: false)
 </head>
 <body>
     <partial name="_HeaderPartial" /> 

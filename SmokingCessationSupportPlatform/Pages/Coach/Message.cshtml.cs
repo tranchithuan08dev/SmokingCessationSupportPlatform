@@ -9,9 +9,7 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
     public class MessageModel : PageModel
     {
         private readonly IChatService _chatService;
-        // private readonly IUserRepository _userRepository;
 
-        // Thu?c tính ð? lýu tr? danh sách cu?c tr? chuy?n
         public List<Conversation> Conversations { get; set; }
 
         public MessageModel(IChatService chatService /*, IUserRepository userRepository */)
@@ -23,6 +21,11 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
 
         public async Task<IActionResult> OnGetAsync()
         {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (role != "Coach")
+            {
+                return RedirectToPage("Account/AccessDenied");
+            }
 
             var coachIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 

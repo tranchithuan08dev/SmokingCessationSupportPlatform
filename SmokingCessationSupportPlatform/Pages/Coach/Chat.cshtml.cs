@@ -34,6 +34,12 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
 
         public async Task<IActionResult> OnGetAsync(int conversationId)
         {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if(role != "Coach")
+            {
+                return RedirectToPage("Account/AccessDenied");
+            }
+
             var coachIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (coachIdClaim == null || !int.TryParse(coachIdClaim.Value, out int currentCoachId))
             {
