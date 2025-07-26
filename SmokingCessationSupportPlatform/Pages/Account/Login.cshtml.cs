@@ -49,6 +49,13 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Account
             {
                 var user = _accountService.LoginByEmailAndPassword(Input.Email, Input.Password);
 
+                if(user == null)
+                {
+                    ErrorMessage = "Invalid login attempt. Please check your email and password.";
+                    ModelState.AddModelError(string.Empty, ErrorMessage); 
+                    return Page();
+                }
+
                 if (user != null)
                 {
                     var claims = new List<Claim>

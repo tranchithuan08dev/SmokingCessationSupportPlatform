@@ -37,7 +37,7 @@ namespace SmokingCessationSupportPlatform.Web.Pages.Coach
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
             if(role != "Coach")
             {
-                return RedirectToPage("Account/AccessDenied");
+                return Redirect("Account/AccessDenied");
             }
 
             var coachIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
